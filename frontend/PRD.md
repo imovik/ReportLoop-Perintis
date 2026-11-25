@@ -1,8 +1,8 @@
-# Product Requirements Document (PRD) â€” Frontend ReportLoop
+# Product Requirements Document (PRD) — Frontend ReportLoop
 
-**Versi:** 1.0 (Fase Semifinal STACK 2026 â€” GDGoC ITB)  
+**Versi:** 1.0 (Fase Semifinal STACK 2026 — GDGoC ITB)  
 **Pemilik Modul:** M. Fadil Faiz (UI/UX Designer & Frontend Developer)  
-**Tim:** Tim Perintis â€” D4 Teknologi Rekayasa Komputer, Politeknik Negeri Indramayu  
+**Tim:** Tim Perintis — D4 Teknologi Rekayasa Komputer, Politeknik Negeri Indramayu  
 **Target Lingkungan:** Web App Responsif (*Mobile-First* & *Desktop*)  
 
 ---
@@ -31,7 +31,7 @@
 
 ## 3. Ruang Lingkup Fitur: Semifinal vs. Final Day
 
-Mengacu pada aturan **STACK 2026**, aplikasi Semifinal wajib berjalan utuh untuk alur inti (*Early Prototype*), namun harus menyisakan 2â€“3 tugas substantif untuk dikerjakan langsung saat **Build Session Final Day (16 Desember 2026)**.
+Mengacu pada aturan **STACK 2026**, aplikasi Semifinal wajib berjalan utuh untuk alur inti (*Early Prototype*), namun harus menyisakan 2–3 tugas substantif untuk dikerjakan langsung saat **Build Session Final Day (16 Desember 2026)**.
 
 ### 3.1 Cakupan Wajib Semifinal (Deadline: 30 November 2026)
 * **FR-01 Autentikasi Peran, Google OAuth & Isolasi Portal Sarpras (CIA):** Halaman masuk & daftar terpisah untuk Mahasiswa (berbasis NIM + Email Google umum, atau *Masuk/Daftar dengan Google* OAuth) dan Admin Sarpras (berbasis Email Google + Kode Undangan, atau Google OAuth dengan verifikasi kode undangan). Dilengkapi fitur **Lupa kata sandi** serta opsi **Ingat saya di perangkat ini** yang memperpanjang masa berlaku sesi dari 8 jam menjadi 7 hari. Portal masuk Admin Sarpras (`admin-masuk.html` / subdomain terpisah di produksi) diisolasi dan tidak ditautkan di UI publik (`index.html`) maupun halaman Mahasiswa untuk meminimalkan permukaan serangan dan menjaga aspek keamanan CIA (*Confidentiality, Integrity, Availability*).
@@ -70,16 +70,16 @@ Fitur berikut **tidak boleh** diklaim selesai pada demo/proposal Semifinal:
 
 ---
 
-## 5. Kontrak API Frontend â€“ Backend (FastAPI Specification)
+## 5. Kontrak API Frontend – Backend (FastAPI Specification)
 
 Dokumen ini menjadi acuan sinkronisasi antara **Frontend** dan **Backend (Ibrahim Movik)** sebelum migrasi ke React:
 
 | Metode | Endpoint | Payload / Query | Respons Sukses | Penanganan Error di FE |
 | :--- | :--- | :--- | :--- | :--- |
-| `GET` | `/api/reports` | Optional: `?category=&status=&sort=` | `200 OK` â€” Array objek `Report` | Fallback ke `SEED_REPORTS` (Mode Demo) dengan toast peringatan. |
-| `POST` | `/api/reports` | `multipart/form-data`: `title`, `description`, `latitude`, `longitude`, `force_submit` (`bool`), `photo` (`file`) | `201 Created` â€” Objek `Report` baru hasil klasifikasi NLP | `400` (`STALE_PHOTO_REJECTED`): tampilkan banner foto lama.<br>`409` (`DUPLICATE_NEARBY_REPORT`): buka modal laporan serupa. |
-| `POST` | `/api/reports/{id}/upvote` | Header `Authorization` / `user_id` | `200 OK` â€” Objek `Report` dengan `upvotes` terbaru | `409` jika sudah pernah upvote; sinkronkan state lokal. |
-| `PATCH` | `/api/reports/{id}/status` | JSON `{ "status": "In Progress" \| "Resolved" }` | `200 OK` â€” Objek `Report` dengan status terbaru | Tampilkan toast gagal dan kembalikan tombol ke status semula. |
+| `GET` | `/api/reports` | Optional: `?category=&status=&sort=` | `200 OK` — Array objek `Report` | Fallback ke `SEED_REPORTS` (Mode Demo) dengan toast peringatan. |
+| `POST` | `/api/reports` | `multipart/form-data`: `title`, `description`, `latitude`, `longitude`, `force_submit` (`bool`), `photo` (`file`) | `201 Created` — Objek `Report` baru hasil klasifikasi NLP | `400` (`STALE_PHOTO_REJECTED`): tampilkan banner foto lama.<br>`409` (`DUPLICATE_NEARBY_REPORT`): buka modal laporan serupa. |
+| `POST` | `/api/reports/{id}/upvote` | Header `Authorization` / `user_id` | `200 OK` — Objek `Report` dengan `upvotes` terbaru | `409` jika sudah pernah upvote; sinkronkan state lokal. |
+| `PATCH` | `/api/reports/{id}/status` | JSON `{ "status": "In Progress" \| "Resolved" }` | `200 OK` — Objek `Report` dengan status terbaru | Tampilkan toast gagal dan kembalikan tombol ke status semula. |
 
 ### Skema Objek `Report` (JSON)
 ```json

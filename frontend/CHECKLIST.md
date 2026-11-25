@@ -1,4 +1,4 @@
-# Checklist Audit & Step Pengerjaan Frontend â€” ReportLoop
+# Checklist Audit & Step Pengerjaan Frontend — ReportLoop
 
 **Target:** Semifinal STACK 2026 (Deadline: 30 November 2026) -> Final Day (16 Desember 2026)  
 **Arsitektur:** Tahap 1 Modular Vanilla HTML/CSS/ES Modules -> Tahap 2 React + Vite  
@@ -49,8 +49,8 @@
   - [x] Memastikan laporan umum dari seluruh mahasiswa hanya tampil pada tab/halaman **Papan Laporan** utama (`js/features/publicBoard.js`).
 
 ### Step 5: Pembaruan Landing Page (`index.html`), Peta GPS, Tracking Progres Admin & Pembersihan File
-â€‹- [x] **5.0 Pembaruan Dokumen `.md` untuk Fitur Tracking Admin:** Memperbarui `PRD.md`, `DESIGN.md`, dan `STACK.md` untuk mencatat alur pelacakan progres pengerjaan admin (`Diterima` -> `Diperbaiki` -> `Selesai`), riwayat status (`status_history`), dan aturan tampilan yang konsisten.
-â€‹- [x] **5.0b Implementasi Fitur Tracking Pengerjaan Admin (User View):** Menambahkan indikator 3 tahap progres dan rincian riwayat status pada tampilan user (`publicBoard.js`, `profile.js`, dan `css/base.css`) sesuai panduan `DESIGN.md` dan `PRD.md`.
+- [x] **5.0 Pembaruan Dokumen `.md` untuk Fitur Tracking Admin:** Memperbarui `PRD.md`, `DESIGN.md`, dan `STACK.md` untuk mencatat alur pelacakan progres pengerjaan admin (`Diterima` -> `Diperbaiki` -> `Selesai`), riwayat status (`status_history`), dan aturan tampilan yang konsisten.
+- [x] **5.0b Implementasi Fitur Tracking Pengerjaan Admin (User View):** Menambahkan indikator 3 tahap progres dan rincian riwayat status pada tampilan user (`publicBoard.js`, `profile.js`, dan `css/base.css`) sesuai panduan `DESIGN.md` dan `PRD.md`.
 - [ ] **5.1 Pembaruan Halaman Utama (`index.html`):**
   - [ ] Mengganti *auto-redirect* langsung ke `masuk.html` menjadi halaman depan bergaya split-hero (`DESIGN.md`) dengan tombol masuk khusus Mahasiswa, alur 3 langkah berikon Heroicons, pratinjau papan laporan publik nyata (`SEED_REPORTS`), dan toggle Light/Dark Mode.
 - [ ] **5.2 Fitur Geolocation GPS Perangkat (`js/features/map.js` & `html/view-mahasiswa.html`):**

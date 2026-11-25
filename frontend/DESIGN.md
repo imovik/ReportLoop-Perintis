@@ -1,8 +1,8 @@
-# Design System & Visual Direction (DESIGN.md) â€” ReportLoop
+# Design System & Visual Direction (DESIGN.md) — ReportLoop
 
-**Produk:** ReportLoop â€” Pelaporan Fasilitas Kampus Politeknik Negeri Indramayu  
+**Produk:** ReportLoop — Pelaporan Fasilitas Kampus Politeknik Negeri Indramayu  
 **Dial Desain:** `ENERGY 2 / RHYTHM 2 / MOTION 2`  
-**Referensi Struktur Visual:** Adaptasi komposisi editorial modern dari referensi visual (`image_433037.png`) ke dalam palet **Biruâ€“Putih (Light Mode)** dan **Biruâ€“Slate Gelap (Dark Mode)** yang bersih, terstruktur, dan bebas *AI slop*.
+**Referensi Struktur Visual:** Adaptasi komposisi editorial modern dari referensi visual (`image_433037.png`) ke dalam palet **Biru–Putih (Light Mode)** dan **Biru–Slate Gelap (Dark Mode)** yang bersih, terstruktur, dan bebas *AI slop*.
 
 ---
 
@@ -12,7 +12,7 @@ Komposisi visual pada referensi gambar diterapkan secara fungsional untuk kebutu
 
 1. **Split Hero dengan Pratinjau Produk Nyata (`index.html`):**
    * **Sisi Kiri (Fokus Tipografi & Aksi):** Judul utama tegas dengan penekanan warna biru merek (`#1d4ed8` pada Light Mode / `#60a5fa` pada Dark Mode) pada frasa kunci (*"Dari Titik Lokasinya."*), deskripsi ringkas alur pelaporan, dan tombol aksi utama untuk masuk sebagai Mahasiswa (portal login Admin Sarpras diisolasi di URL/domain terpisah demi keamanan CIA).
-   * **Sisi Kanan (Pratinjau Antarmuka & Bentuk Aksen Geometri):** Bingkai pratinjau aplikasi ReportLoop (peta kampus + kartu status laporan) di atas bidang aksen biru solid melengkung di sudut kanan atas â€” menjadi satu-satunya bidang aksen besar di halaman agar mata langsung tertuju pada pratinjau produk.
+   * **Sisi Kanan (Pratinjau Antarmuka & Bentuk Aksen Geometri):** Bingkai pratinjau aplikasi ReportLoop (peta kampus + kartu status laporan) di atas bidang aksen biru solid melengkung di sudut kanan atas — menjadi satu-satunya bidang aksen besar di halaman agar mata langsung tertuju pada pratinjau produk.
 2. **Ritme Section Bervariasi (`RHYTHM 2`):**
    * **Bar Alur 3 Langkah Inti:** Ikon Heroicons berbingkai tipis di atas label ringkas (*1. Sematkan Titik Peta*, *2. Klasifikasi Otomatis NLP*, *3. Triase & Upvote Kolektif*).
    * **Section Split Tentang Sistem & Alur:** Penjelasan peran ganda (Mahasiswa Pelapor & Admin Sarpras) dengan daftar poin berikon centang dan pratinjau ringkasan status.
@@ -23,7 +23,7 @@ Komposisi visual pada referensi gambar diterapkan secara fungsional untuk kebutu
 
 ---
 
-## 2. Sistem Warna: Light Mode & Dark Mode (Biruâ€“Putih)
+## 2. Sistem Warna: Light Mode & Dark Mode (Biru–Putih)
 
 Palet dibatasi pada **2 warna inti (Putih/Slate netral + Biru Merek)** ditambah **3 warna status fungsional** yang hanya muncul pada badge status dan pin peta.
 
@@ -57,13 +57,13 @@ Palet terang menggunakan *soft-white* (putih tidak terlalu putih/mencolok) untuk
 
 ## 3. Tipografi & Hierarki Skala
 
-* **Font Utama (`--font-sans`):** `Plus Jakarta Sans` â€” dipilih karena proporsi hurufnya jernih untuk kalimat Bahasa Indonesia dan antarmuka operasional kampus.
-* **Font Monospace (`--font-mono`):** `JetBrains Mono` â€” digunakan khusus pada angka koordinat GPS (`-6.40850, 108.28150`), ID laporan (`#rep-001`), dan persentase keyakinan NLP agar digit sejajar vertikal.
+* **Font Utama (`--font-sans`):** `Plus Jakarta Sans` — dipilih karena proporsi hurufnya jernih untuk kalimat Bahasa Indonesia dan antarmuka operasional kampus.
+* **Font Monospace (`--font-mono`):** `JetBrains Mono` — digunakan khusus pada angka koordinat GPS (`-6.40850, 108.28150`), ID laporan (`#rep-001`), dan persentase keyakinan NLP agar digit sejajar vertikal.
 * **Skala Ukuran:**
   * Hero Headline (`h1`): `clamp(2rem, 4vw, 3rem)`, `font-weight: 800`, `line-height: 1.15`, `letter-spacing: -0.025em`.
-  * Judul Section (`h2`): `1.375rem` â€“ `1.75rem`, `font-weight: 800`, `letter-spacing: -0.015em`.
-  * Judul Kartu (`h3`): `1rem` â€“ `1.125rem`, `font-weight: 700`.
-  * Teks Isi & Form: `0.9375rem` â€“ `1rem` (`16px` pada input mobile untuk mencegah *auto-zoom* iOS).
+  * Judul Section (`h2`): `1.375rem` – `1.75rem`, `font-weight: 800`, `letter-spacing: -0.015em`.
+  * Judul Kartu (`h3`): `1rem` – `1.125rem`, `font-weight: 700`.
+  * Teks Isi & Form: `0.9375rem` – `1rem` (`16px` pada input mobile untuk mencegah *auto-zoom* iOS).
 
 ---
 
@@ -110,6 +110,7 @@ Untuk menjaga performa tetap ringan tanpa *bundler* pada tahap Vanilla sebelum m
 Seluruh tampilan wajib tetap fungsional, nyaman disentuh, dan bebas *horizontal scroll* mulai dari lebar layar `320px` hingga desktop lebar:
 
 * **Header Kompak 2 Tingkat (`html/header.html`):** Pada layar `< lg`, header disusun maksimal 2 baris vertikal (baris merek + kontrol cepat Profil/Tema/Keluar di atas; baris navigasi utama + tombol Mode Demo kompak di bawah) agar ruang vertikal viewport tetap lapang untuk konten utama.
+* **Menu Navigasi Rata Tengah & Akses Profil (`html/header.html`, `js/features/header.js`):** Daftar menu hanya berisi halaman kerja (Mahasiswa: *Peta & Lapor*, *Papan Laporan*; Admin Sarpras: *Antrean Triase*, *Peta Kampus*). Halaman Profil tidak lagi menjadi item menu karena sudah dibuka lewat tombol akun di pojok header (ikon profil pada layar `< lg`, avatar + nama pada `>= xl`; pada `lg` hanya avatar dengan `aria-label`). Pada layar `>= xl` header memakai grid `1fr auto 1fr` agar menu tepat di tengah halaman untuk peran Mahasiswa maupun Admin; pada `lg` memakai flex dengan menu rata tengah di ruang antara merek dan kontrol kanan, sedangkan label teks tombol Tema dan nama profil disembunyikan agar tidak meluap.
 * **Tinggi Peta Adaptif (`css/map.css`):** Kontainer `#campus-map` menggunakan `height: clamp(220px, 38vh, 340px)` pada layar seluler dan `420px` pada desktop (`>= 1024px`) sehingga peta tetap nyaman disentuh tanpa mendorong formulir laporan terlalu jauh ke bawah.
 * **Perlindungan Luapan Teks & Koordinat (`css/base.css`, `view-mahasiswa.html`):**
   * Aturan global `overflow-x: hidden`, `overflow-wrap: anywhere`, dan `word-break: break-word` mencegah judul atau deskripsi tanpa spasi merusak lebar kartu, sementara elemen `.font-mono` dan input menjaga keterbacaan angka.

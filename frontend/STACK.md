@@ -1,4 +1,4 @@
-# Frontend Tech Stack & Architecture Guide (STACK.md) â€” ReportLoop
+# Frontend Tech Stack & Architecture Guide (STACK.md) — ReportLoop
 
 **Fase:** Tahap 1 (Modular Vanilla HTML/CSS/ES Modules) -> Tahap 2 (Migrasi 1:1 ke React + Vite + Leaflet)  
 **Pemilik Modul:** M. Fadil Faiz (UI/UX Designer & Frontend Developer)  
@@ -8,10 +8,10 @@
 
 ## 1. Strategi Dua Tahap (Vanilla-First -> React Migration)
 
-1. **Tahap 1 â€” Modular Vanilla HTML5 + Tailwind CSS + ES2022 Modules (Semifinal Early Prototype):**
+1. **Tahap 1 — Modular Vanilla HTML5 + Tailwind CSS + ES2022 Modules (Semifinal Early Prototype):**
    * Tanpa *build step* rumit sehingga langsung bisa dijalankan via Live Server / HTTP lokal saat demo dan pengujian endpoint FastAPI (`http://127.0.0.1:8000`).
    * Menggunakan ES Modules (`<script type="module">`) dengan pemisahan ketat antara **lapisan layanan (`services/`)**, **state terpusat (`state/`)**, **utilitas murni (`utils/`)**, dan **komponen tampilan (`features/` + `html/`)**.
-2. **Tahap 2 â€” Migrasi ke React + Vite (Setelah Kontrak API 100% Teruji):**
+2. **Tahap 2 — Migrasi ke React + Vite (Setelah Kontrak API 100% Teruji):**
    * Setiap folder dan berkas di struktur Vanilla memiliki pasangan langsung di struktur React sehingga proses konversi bersifat mekanis dan minim risiko bug.
 
 ---
@@ -34,52 +34,52 @@
 
 ```text
 FE-ReportLoop/
-â”œâ”€â”€ index.html                  # Landing & Papan Publik Read-Only (Hero + Alur + Live Board)
-â”œâ”€â”€ user.html                   # Ruang Kerja Mahasiswa (Peta + Form Laporan + Papan Upvote)
-â”œâ”€â”€ admin.html                  # Panel Triase Admin Sarpras (KPI + Antrean Prioritas + Peta)
-â”œâ”€â”€ masuk.html / daftar.html    # Autentikasi Mahasiswa (NIM + Email Google, Google OAuth, Lupa Sandi, Ingat Saya 7 hari)
-â”œâ”€â”€ admin-masuk.html / admin-daftar.html # Autentikasi Petugas Sarpras terisolasi (Email Google + Kode Undangan, Google OAuth, Lupa Sandi, Ingat Saya 7 hari; siap untuk subdomain khusus di produksi)
-â”œâ”€â”€ PRD.md                      # Spesifikasi Kebutuhan Produk Frontend
-â”œâ”€â”€ DESIGN.md                   # Sistem Desain Blue-White Light/Dark Mode
-â”œâ”€â”€ STACK.md                    # Dokumentasi Arsitektur & Kontrak Teknis
-â”œâ”€â”€ css/
-â”‚   â”œâ”€â”€ base.css                # Token warna Light/Dark, komponen tombol/form/badge, utilitas
-â”‚   â””â”€â”€ map.css                 # Dimensi kontainer Leaflet, pin target, & penyesuaian Dark Mode
-â”œâ”€â”€ html/                       # Partial HTML (setara komponen JSX di React)
-â”‚   â”œâ”€â”€ header.html             # -> <Header/> (Navigasi peran, toggle tema, mode API, sesi)
-â”‚   â”œâ”€â”€ footer.html             # -> <Footer/>
-â”‚   â”œâ”€â”€ view-mahasiswa.html     # -> <StudentDashboard/>
-â”‚   â”œâ”€â”€ view-admin.html         # -> <AdminDashboard/>
-â”‚   â””â”€â”€ duplicate-modal.html    # -> <DuplicateReportModal/>
-â””â”€â”€ js/
-    â”œâ”€â”€ main.js                 # -> App.jsx / main.jsx (Bootstrap halaman & event delegation)
-    â”œâ”€â”€ config/
-    â”‚   â”œâ”€â”€ constants.js        # -> src/config/constants.js (Koordinat kampus, URL API, aturan NLP)
-    â”‚   â””â”€â”€ tailwind.config.js  # -> tailwind.config.js
-    â”œâ”€â”€ data/
-    â”‚   â””â”€â”€ seedReports.js      # -> src/data/seedReports.js (Data awal Mode Demo)
-    â”œâ”€â”€ state/
-    â”‚   â””â”€â”€ store.js            # -> src/context/ReportContext.jsx / Zustand store
-    â”œâ”€â”€ services/               # Logika murni tanpa akses DOM (100% reusable di React)
-    â”‚   â”œâ”€â”€ api.js              # -> src/services/api.js (Client REST FastAPI + Auth Header)
-    â”‚   â”œâ”€â”€ auth.js             # -> src/services/auth.js (Sesi 8j/7h, Google OAuth, reset sandi, & validasi peran)
-    â”‚   â”œâ”€â”€ geo.js              # -> src/utils/geo.js (Rumus Haversine radius 15m)
-    â”‚   â””â”€â”€ nlp.js              # -> src/utils/nlp.js (Simulasi prediksi kategori TF-IDF/NB)
-    â”œâ”€â”€ features/               # Kontroler UI per modul (setara komponen pintar React)
-    â”‚   â”œâ”€â”€ header.js           # Navigasi aktif, toggle Light/Dark Mode, toggle Demo/Live API
-    â”‚   â”œâ”€â”€ map.js              # Inisialisasi Leaflet, GPS Geolocation, & sinkronisasi marker
-    â”‚   â”œâ”€â”€ photo.js            # Upload foto live wajib (tanpa opsi foto lama), validasi tipe/ukuran, & pratinjau kamera
-    â”‚   â”œâ”€â”€ reportForm.js       # Submit laporan (blokir foto lama), deteksi duplikat 15m, upvote, & update status
-    â”‚   â”œâ”€â”€ publicBoard.js      # Filter kategori/status, pencarian, tab dukungan, tracking progres admin, & kartu laporan
-    â”‚   â”œâ”€â”€ adminPanel.js       # Hitung KPI riil & render antrean triase Sarpras
-    â”‚   â”œâ”€â”€ duplicateModal.js   # Kontrol dialog aksesibel (Escape & Tab focus trap)
-    â”‚   â””â”€â”€ authPage.js         # Validasi form login/register, Google OAuth, modal lupa sandi, & Ingat Saya
-    â””â”€â”€ utils/
-        â”œâ”€â”€ badges.js           # Pemetaan label & kelas warna status/kategori
-        â”œâ”€â”€ escapeHtml.js       # Sanitasi string untuk mencegah XSS pada innerHTML
-        â”œâ”€â”€ scrollReveal.js     # Efek kemunculan halus berbasis IntersectionObserver
-        â”œâ”€â”€ theme.js            # Pengelola tema Light/Dark + efek transisi radial dari tombol toggle (localStorage + prefers-color-scheme)
-        â””â”€â”€ toast.js            # Notifikasi umpan balik aksi pengguna
+├── index.html                  # Landing & Papan Publik Read-Only (Hero + Alur + Live Board)
+├── user.html                   # Ruang Kerja Mahasiswa (Peta + Form Laporan + Papan Upvote)
+├── admin.html                  # Panel Triase Admin Sarpras (KPI + Antrean Prioritas + Peta)
+├── masuk.html / daftar.html    # Autentikasi Mahasiswa (NIM + Email Google, Google OAuth, Lupa Sandi, Ingat Saya 7 hari)
+├── admin-masuk.html / admin-daftar.html # Autentikasi Petugas Sarpras terisolasi (Email Google + Kode Undangan, Google OAuth, Lupa Sandi, Ingat Saya 7 hari; siap untuk subdomain khusus di produksi)
+├── PRD.md                      # Spesifikasi Kebutuhan Produk Frontend
+├── DESIGN.md                   # Sistem Desain Blue-White Light/Dark Mode
+├── STACK.md                    # Dokumentasi Arsitektur & Kontrak Teknis
+├── css/
+│   ├── base.css                # Token warna Light/Dark, komponen tombol/form/badge, utilitas
+│   └── map.css                 # Dimensi kontainer Leaflet, pin target, & penyesuaian Dark Mode
+├── html/                       # Partial HTML (setara komponen JSX di React)
+│   ├── header.html             # -> <Header/> (Navigasi peran, toggle tema, mode API, sesi)
+│   ├── footer.html             # -> <Footer/>
+│   ├── view-mahasiswa.html     # -> <StudentDashboard/>
+│   ├── view-admin.html         # -> <AdminDashboard/>
+│   └── duplicate-modal.html    # -> <DuplicateReportModal/>
+└── js/
+    ├── main.js                 # -> App.jsx / main.jsx (Bootstrap halaman & event delegation)
+    ├── config/
+    │   ├── constants.js        # -> src/config/constants.js (Koordinat kampus, URL API, aturan NLP)
+    │   └── tailwind.config.js  # -> tailwind.config.js
+    ├── data/
+    │   └── seedReports.js      # -> src/data/seedReports.js (Data awal Mode Demo)
+    ├── state/
+    │   └── store.js            # -> src/context/ReportContext.jsx / Zustand store
+    ├── services/               # Logika murni tanpa akses DOM (100% reusable di React)
+    │   ├── api.js              # -> src/services/api.js (Client REST FastAPI + Auth Header)
+    │   ├── auth.js             # -> src/services/auth.js (Sesi 8j/7h, Google OAuth, reset sandi, & validasi peran)
+    │   ├── geo.js              # -> src/utils/geo.js (Rumus Haversine radius 15m)
+    │   └── nlp.js              # -> src/utils/nlp.js (Simulasi prediksi kategori TF-IDF/NB)
+    ├── features/               # Kontroler UI per modul (setara komponen pintar React)
+    │   ├── header.js           # Navigasi aktif, toggle Light/Dark Mode, toggle Demo/Live API
+    │   ├── map.js              # Inisialisasi Leaflet, GPS Geolocation, & sinkronisasi marker
+    │   ├── photo.js            # Upload foto live wajib (tanpa opsi foto lama), validasi tipe/ukuran, & pratinjau kamera
+    │   ├── reportForm.js       # Submit laporan (blokir foto lama), deteksi duplikat 15m, upvote, & update status
+    │   ├── publicBoard.js      # Filter kategori/status, pencarian, tab dukungan, tracking progres admin, & kartu laporan
+    │   ├── adminPanel.js       # Hitung KPI riil & render antrean triase Sarpras
+    │   ├── duplicateModal.js   # Kontrol dialog aksesibel (Escape & Tab focus trap)
+    │   └── authPage.js         # Validasi form login/register, Google OAuth, modal lupa sandi, & Ingat Saya
+    └── utils/
+        ├── badges.js           # Pemetaan label & kelas warna status/kategori
+        ├── escapeHtml.js       # Sanitasi string untuk mencegah XSS pada innerHTML
+        ├── scrollReveal.js     # Efek kemunculan halus berbasis IntersectionObserver
+        ├── theme.js            # Pengelola tema Light/Dark + efek transisi radial dari tombol toggle (localStorage + prefers-color-scheme)
+        └── toast.js            # Notifikasi umpan balik aksi pengguna
 ```
 
 ---
@@ -99,6 +99,6 @@ FE-ReportLoop/
 ## 5. Checklist Kesiapan Sebelum Konversi ke React
 
 - [ ] Seluruh alur pengguna (Pengunjung -> Masuk -> Buat Laporan + Peta + Foto -> Upvote -> Triase Admin) berjalan tanpa error di konsol browser.
-- [ ] Mode Terang (Biruâ€“Putih) dan Mode Gelap (Biruâ€“Slate) teruji kontras dan keterbacaannya di seluruh halaman.
+- [ ] Mode Terang (Biru–Putih) dan Mode Gelap (Biru–Slate) teruji kontras dan keterbacaannya di seluruh halaman.
 - [ ] Kontrak JSON `Report` dan endpoint `/api/reports` sudah teruji langsung dengan server FastAPI milik Ibrahim.
 - [ ] Setelah 3 poin di atas terpenuhi, salin folder `js/services/`, `js/config/`, `js/data/`, dan `js/utils/` ke `src/` proyek React + Vite dan konversi `html/*.html` menjadi komponen `.jsx`.
