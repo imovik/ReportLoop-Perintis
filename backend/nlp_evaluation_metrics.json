@@ -1,0 +1,30 @@
+{
+  "dataset_total": 180,
+  "train_size": 126,
+  "test_size": 54,
+  "baseline_macro_f1": 0.6788,
+  "nlp_macro_f1": 0.8526,
+  "labels": [
+    "Infrastructure",
+    "Cleanliness",
+    "Security"
+  ],
+  "confusion_matrix": [
+    [
+      15,
+      2,
+      1
+    ],
+    [
+      0,
+      16,
+      2
+    ],
+    [
+      1,
+      2,
+      15
+    ]
+  ],
+  "confidence_threshold": 0.6
+}
