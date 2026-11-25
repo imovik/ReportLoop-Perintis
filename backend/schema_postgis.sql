@@ -1,9 +1,27 @@
 CREATE EXTENSION IF NOT EXISTS postgis;
 
+DROP TABLE IF EXISTS report_upvotes;
 DROP TABLE IF EXISTS reports;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS admins;
+
+CREATE TABLE users (
+    nim VARCHAR(12) PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    name VARCHAR(120) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE admins (
+    email VARCHAR(255) PRIMARY KEY,
+    name VARCHAR(120) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
 
 CREATE TABLE reports (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    reporter_id VARCHAR(255) DEFAULT '2509015',
+    reporter_name VARCHAR(120) DEFAULT 'Mahasiswa Polindra',
     title VARCHAR(120) NOT NULL,
     description TEXT NOT NULL,
     photo_url TEXT,
@@ -17,12 +35,29 @@ CREATE TABLE reports (
     resolved_at TIMESTAMPTZ
 );
 
+CREATE TABLE report_upvotes (
+    report_id UUID NOT NULL REFERENCES reports(id) ON DELETE CASCADE,
+    user_id VARCHAR(255) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (report_id, user_id)
+);
+
 CREATE INDEX idx_reports_location ON reports USING GIST (location);
 CREATE INDEX idx_reports_status_category ON reports (status, category);
+CREATE INDEX idx_reports_reporter ON reports (reporter_id);
 
-INSERT INTO reports (title, description, photo_verification, location, category, nlp_confidence, status, upvotes)
+-- Seed akun & laporan awal kampus Politeknik Negeri Indramayu
+INSERT INTO users (nim, email, name) VALUES
+('2509015', 'ibrahim.movik@gmail.com', 'Ibrahim Movik');
+
+INSERT INTO admins (email, name) VALUES
+('sarpras.polindra@gmail.com', 'Unit Sarpras Polindra');
+
+INSERT INTO reports (reporter_id, reporter_name, title, description, photo_verification, location, category, nlp_confidence, status, upvotes)
 VALUES
 (
+    '2509015',
+    'Ibrahim Movik',
     'Lampu lorong lantai 2 padam',
     'Lampu penerangan koridor lantai 2 Gedung Kuliah Terpadu mati sejak kemarin malam.',
     'Verified (Fresh camera photo)',
@@ -33,6 +68,8 @@ VALUES
     14
 ),
 (
+    '2509022',
+    'Ahmad Zakky A',
     'Bak sampah depan kantin penuh',
     'Sampah menumpuk meluap ke jalur pejalan kaki dan menimbulkan bau tidak sedap.',
     'Verified (Fresh camera photo)',
@@ -43,6 +80,8 @@ VALUES
     9
 ),
 (
+    '2509031',
+    'Mohamad Rizki',
     'Gembok pagar parkir motor rusak',
     'Gembok gerbang parkir barat macet dan tidak bisa dikunci saat sore hari.',
     'Verified (Fresh camera photo)',
