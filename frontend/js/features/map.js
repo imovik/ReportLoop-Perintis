@@ -197,13 +197,13 @@ export function renderMapMarkers() {
         <div style="font-size: 12px; font-weight: 700; color: ${color}; margin-bottom: 2px;">
           ${escapeHtml(STATUS_LABEL[rep.status] || rep.status)} \u2022 ${escapeHtml(CATEGORY_LABEL[rep.category] || rep.category)}
         </div>
-        <div style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 4px;">
+        <div style="font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px;">
           ${escapeHtml(rep.title)}
         </div>
-        <div style="font-size: 12px; color: #475569; margin-bottom: 6px;">
+        <div style="font-size: 12px; color: var(--ink-soft); margin-bottom: 6px;">
           ${escapeHtml(rep.description)}
         </div>
-        <div style="font-size: 12px; font-weight: 700; color: #1e3a8a;">
+        <div style="font-size: 12px; font-weight: 700; color: var(--brand);">
           ${rep.upvotes} dukungan
         </div>
       </div>

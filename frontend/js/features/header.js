@@ -11,16 +11,17 @@ import { focusMapOn } from './map.js';
 import { renderProfilePanel } from './profile.js';
 import { setScope } from './publicBoard.js';
 
+// Halaman profil dibuka lewat tombol akun di pojok header, bukan dari daftar menu
+const PROFILE_VIEW = 'profil';
+
 const NAV_ITEMS = {
   user: [
     { view: 'lapor', label: 'Peta & Lapor' },
     { view: 'papan', label: 'Papan Laporan' },
-    { view: 'profil', label: 'Profil Saya' },
   ],
   admin: [
     { view: 'antrean', label: 'Antrean Triase' },
     { view: 'peta', label: 'Peta Kampus' },
-    { view: 'profil', label: 'Profil Petugas' },
   ],
 };
 
@@ -41,7 +42,7 @@ export function getActiveView() {
 }
 
 export function switchView(role, viewId, { updateHash = true } = {}) {
-  const validViews = (NAV_ITEMS[role] || []).map((item) => item.view);
+  const validViews = [...(NAV_ITEMS[role] || []).map((item) => item.view), PROFILE_VIEW];
   const targetView = validViews.includes(viewId) ? viewId : DEFAULT_VIEW[role];
   activeView = targetView;
 
@@ -89,24 +90,39 @@ export function renderNav(role) {
         `<li><button type="button" class="nav-link" data-nav-view="${item.view}">${item.label}</button></li>`
     )
     .join('');
+
+  const panelList = document.getElementById('panel-nav');
+  if (panelList) {
+    panelList.innerHTML = NAV_ITEMS[role]
+      .map(
+        (item) =>
+          `<li><button type="button" role="menuitem" class="menu-item" data-nav-view="${item.view}">${item.label}</button></li>`
+      )
+      .join('');
+  }
 }
 
 export function renderSession(session) {
-  const nameDesktop = document.getElementById('session-name');
-  const nameMobile = document.getElementById('session-name-mobile');
-  const avatar = document.getElementById('session-avatar');
   const roleLabel = document.getElementById('role-label');
+  const initials = (session.name || 'U')
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0] || '')
+    .join('')
+    .toUpperCase();
 
-  if (nameDesktop) nameDesktop.textContent = session.name;
-  if (nameMobile) nameMobile.textContent = session.name.split(/\s+/)[0] || 'Profil';
-  if (avatar) {
-    avatar.textContent = (session.name || 'U')
-      .split(/\s+/)
-      .slice(0, 2)
-      .map((w) => w[0] || '')
-      .join('')
-      .toUpperCase();
-  }
+  document.querySelectorAll('[data-session-name]').forEach((el) => {
+    el.textContent = session.name || '-';
+  });
+  document.querySelectorAll('[data-session-avatar]').forEach((el) => {
+    el.textContent = initials;
+  });
+  document.querySelectorAll('[data-session-role]').forEach((el) => {
+    el.textContent = ROLE_TEXT[session.role] || '';
+  });
+  document.querySelectorAll('[data-session-id]').forEach((el) => {
+    el.textContent = session.nim || session.id || session.email || '-';
+  });
   if (roleLabel) {
     roleLabel.textContent = `${ROLE_TEXT[session.role]} \u2022 Politeknik Negeri Indramayu`;
   }
@@ -165,6 +181,42 @@ export async function toggleApiMode(renderAll) {
   }
 }
 
+function bindAccountPanel() {
+  const panel = document.getElementById('account-panel');
+  const backdrop = document.getElementById('account-backdrop');
+  const triggers = document.querySelectorAll('[data-account-trigger]');
+  if (!panel || !backdrop || triggers.length === 0) return;
+
+  const setOpen = (open) => {
+    panel.classList.toggle('hidden', !open);
+    backdrop.classList.toggle('hidden', !open);
+    triggers.forEach((btn) => btn.setAttribute('aria-expanded', String(open)));
+  };
+  const isOpen = () => !panel.classList.contains('hidden');
+
+  triggers.forEach((btn) => {
+    btn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      setOpen(!isOpen());
+    });
+  });
+  backdrop.addEventListener('click', () => setOpen(false));
+  document.addEventListener('click', (event) => {
+    if (isOpen() && !panel.contains(event.target)) setOpen(false);
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && isOpen()) {
+      setOpen(false);
+      triggers.forEach((btn) => {
+        if (btn.offsetParent !== null) btn.focus();
+      });
+    }
+  });
+  panel.addEventListener('click', (event) => {
+    if (event.target.closest('[data-nav-view], [data-logout-trigger]')) setOpen(false);
+  });
+}
+
 function doLogout(role) {
   logout();
   window.location.replace(ROLE_LOGIN[role]);
@@ -173,6 +225,7 @@ function doLogout(role) {
 export function bindHeaderEvents(renderAll, session) {
   renderNav(session.role);
   renderSession(session);
+  bindAccountPanel();
   setApiModeUI('demo');
 
   // Di domain publik tanpa alamat backend yang diatur, mode live tidak mungkin tersambung

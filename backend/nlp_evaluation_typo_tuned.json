@@ -1,0 +1,36 @@
+{
+  "source_dataset": "Kaggle: Indonesian Campus Complaints & Aspirations (yogagustirachmadi)",
+  "curated_total": 1200,
+  "train_size": 840,
+  "test_size": 360,
+  "best_params": {
+    "C": 10.0,
+    "class_weight": null,
+    "solver": "lbfgs"
+  },
+  "baseline_macro_f1": 0.8451,
+  "nlp_macro_f1": 0.9473,
+  "labels": [
+    "Infrastructure",
+    "Cleanliness",
+    "Security"
+  ],
+  "confusion_matrix": [
+    [
+      113,
+      2,
+      5
+    ],
+    [
+      4,
+      115,
+      1
+    ],
+    [
+      6,
+      1,
+      113
+    ]
+  ],
+  "confidence_threshold": 0.6
+}

@@ -1,6 +1,6 @@
-# ReportLoop â€” Frontend (Temporary Development README)
+# ReportLoop — Frontend (Temporary Development README)
 
-> **Status:** Draft / Early Prototype (Tahap 1 â€” Vanilla HTML5, Tailwind CSS CDN, ES2022 Modules)  
+> **Status:** Draft / Early Prototype (Tahap 1 — Vanilla HTML5, Tailwind CSS CDN, ES2022 Modules)  
 > Dokumen ini bersifat sementara selama pengembangan **Semifinal STACK 2026 (GDGoC ITB)** sebelum migrasi ke **React + Vite** dan perilisan README production.
 
 **ReportLoop** adalah aplikasi web pelacakan masalah fasilitas kampus dan lingkungan hunian mahasiswa berbasis lokasi peta (*Leaflet.js*) serta dukungan kolektif (`+1 Upvote`). Dikembangkan oleh **Tim Perintis** (D4 Teknologi Rekayasa Komputer, Politeknik Negeri Indramayu).
@@ -9,7 +9,7 @@
 
 ## Cara Menjalankan (Lokal)
 
-1. Buka folder `FE-ReportLoop` di VS Code.
+1. Buka folder `frontend` (sejajar dengan `backend` di repo tim) di VS Code.
 2. Jalankan melalui server HTTP lokal, misalnya:
    - Ekstensi **Live Server** di VS Code (klik *Go Live* pada `index.html`), atau
    - Terminal: `python -m http.server 5500` / `npx serve .`
@@ -45,7 +45,7 @@ Untuk melepas Client ID: `localStorage.removeItem('reportloop.googleClientId')`.
 Akun disimpan secara lokal di `localStorage` browser masing-masing.
 
 - **Mahasiswa (Pelapor)**
-  1. Daftar di `html/daftar.html` menggunakan **NIM (6â€“12 digit)**, **Email Google umum** (`@gmail.com`), dan kata sandi (min. 8 karakter), atau gunakan tombol **Daftar dengan Google** (OAuth).
+  1. Daftar di `html/daftar.html` menggunakan **NIM (6–12 digit)**, **Email Google umum** (`@gmail.com`), dan kata sandi (min. 8 karakter), atau gunakan tombol **Daftar dengan Google** (OAuth).
   2. Masuk melalui `html/masuk.html` (via NIM + sandi atau **Masuk dengan Google**), dengan opsi **Ingat saya di perangkat ini** (sesi 7 hari) dan **Lupa kata sandi?** untuk mengakses `html/user.html`.
 - **Admin Sarpras (Pengelola)**
   1. Daftar di `html/admin-daftar.html` menggunakan **Email Google**, kata sandi (min. 8 karakter), dan kode undangan demo (diberikan terpisah oleh tim pengembang, tidak ditulis di repo), atau gunakan tombol **Daftar dengan Google** + kode undangan.
@@ -56,22 +56,24 @@ Akun disimpan secara lokal di `localStorage` browser masing-masing.
 ## Struktur Direktori Saat Ini
 
 ```text
-FE-ReportLoop/
-â”œâ”€â”€ index.html          # Landing page & pratinjau papan laporan publik
-â”œâ”€â”€ css/                # Token warna Light/Dark (base.css) & styling peta (map.css)
-â”œâ”€â”€ html/               # Halaman peran, halaman auth, dan partial komponen UI
-â”œâ”€â”€ js/
-â”‚   â”œâ”€â”€ main.js         # Entry point & inisialisasi modul
-â”‚   â”œâ”€â”€ config/         # Konstanta kampus, endpoint API, & konfigurasi Tailwind
-â”‚   â”œâ”€â”€ data/           # Data dummy SEED_REPORTS untuk Mode Demo
-â”‚   â”œâ”€â”€ state/          # Store state aplikasi
-â”‚   â”œâ”€â”€ services/       # API client FastAPI, auth demo, kalkulasi geo 15m, & NLP
-â”‚   â”œâ”€â”€ features/       # Kontroler UI (peta, foto, form, papan publik, panel admin)
-â”‚   â””â”€â”€ utils/          # Theme toggle, toast, badge, sanitasi HTML, scroll reveal
-â”œâ”€â”€ PRD.md              # Spesifikasi kebutuhan produk frontend
-â”œâ”€â”€ DESIGN.md           # Panduan sistem desain Light/Dark Mode
-â”œâ”€â”€ STACK.md            # Arsitektur teknis & peta migrasi ke React
-â””â”€â”€ CHECKLIST.md        # Checklist audit & roadmap pengerjaan
+frontend/
+├── index.html          # Landing page & pratinjau papan laporan publik
+├── css/                # Token warna Light/Dark (base.css) & styling peta (map.css)
+├── html/               # Halaman peran, halaman auth, dan partial komponen UI
+├── js/
+│   ├── main.js         # Entry point & inisialisasi modul
+│   ├── config/         # Konstanta kampus, endpoint API, & konfigurasi Tailwind
+│   ├── data/           # Data dummy SEED_REPORTS untuk Mode Demo
+│   ├── state/          # Store state aplikasi
+│   ├── services/       # API client FastAPI, auth (akun lokal + Google via backend), kalkulasi geo 15m, & NLP
+│   ├── features/       # Kontroler UI (peta, foto, form, papan publik, panel admin, carousel 3 langkah)
+│   └── utils/          # Theme toggle, toast, badge, sanitasi HTML, scroll reveal
+├── PRD.md              # Spesifikasi kebutuhan produk frontend
+├── DESIGN.md           # Panduan sistem desain Light/Dark Mode
+├── STACK.md            # Arsitektur teknis & peta migrasi ke React
+â”œâ”€â”€ MIGRATION-REACT.md  # Rencana migrasi ke React + Vite & daftar endpoint
+â”œâ”€â”€ BACKEND-GOOGLE-AUTH.md # Panduan backend: kontrak & implementasi Google Auth
+└── CHECKLIST.md        # Checklist audit & roadmap pengerjaan
 ```
 
 ---

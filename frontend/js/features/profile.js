@@ -84,7 +84,7 @@ export function renderProfilePanel(onSessionUpdated) {
             ${escapeHtml(initials)}
           </div>
           <div class="min-w-0">
-            <span class="badge badge-progress">${escapeHtml(roleTitle)}</span>
+            <span class="badge badge-cat">${escapeHtml(roleTitle)}</span>
             <h1 class="mt-1.5 text-xl font-extrabold text-ink-900 dark:text-white truncate">${escapeHtml(session.name)}</h1>
             <p class="text-xs font-mono text-ink-600 dark:text-ink-300 truncate">${escapeHtml(session.id)}</p>
           </div>
