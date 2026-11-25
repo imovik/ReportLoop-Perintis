@@ -51,12 +51,32 @@
 ### Step 5: Pembaruan Landing Page (`index.html`), Peta GPS, Tracking Progres Admin & Pembersihan File
 - [x] **5.0 Pembaruan Dokumen `.md` untuk Fitur Tracking Admin:** Memperbarui `PRD.md`, `DESIGN.md`, dan `STACK.md` untuk mencatat alur pelacakan progres pengerjaan admin (`Diterima` -> `Diperbaiki` -> `Selesai`), riwayat status (`status_history`), dan aturan tampilan yang konsisten.
 - [x] **5.0b Implementasi Fitur Tracking Pengerjaan Admin (User View):** Menambahkan indikator 3 tahap progres dan rincian riwayat status pada tampilan user (`publicBoard.js`, `profile.js`, dan `css/base.css`) sesuai panduan `DESIGN.md` dan `PRD.md`.
-- [ ] **5.1 Pembaruan Halaman Utama (`index.html`):**
-  - [ ] Mengganti *auto-redirect* langsung ke `masuk.html` menjadi halaman depan bergaya split-hero (`DESIGN.md`) dengan tombol masuk khusus Mahasiswa, alur 3 langkah berikon Heroicons, pratinjau papan laporan publik nyata (`SEED_REPORTS`), dan toggle Light/Dark Mode.
-- [ ] **5.2 Fitur Geolocation GPS Perangkat (`js/features/map.js` & `html/view-mahasiswa.html`):**
-  - [ ] Menambahkan tombol **"Gunakan Lokasi GPS Saya"** (`navigator.geolocation`) di atas/bawah peta kampus beserta penanganan error izin lokasi.
-- [ ] **5.3 Pembersihan File Lama:**
-  - [ ] Memindahkan atau menghapus file monolitik lama (`reportloop_campus_web_app.html` dan `reportloop_campus_web_app.backup.html`) jika masih ada setelah seluruh halaman modular terverifikasi.
+- [x] **5.1 Pembaruan Halaman Utama (`index.html`):**
+  - [x] Mengganti *auto-redirect* langsung ke `masuk.html` menjadi halaman depan bergaya split-hero (`DESIGN.md`) dengan tombol masuk khusus Mahasiswa, alur 3 langkah berikon Heroicons, pratinjau papan laporan publik nyata (`SEED_REPORTS`), dan toggle Light/Dark Mode.
+- [x] **5.2 Fitur Geolocation GPS Perangkat (`js/features/map.js` & `html/view-mahasiswa.html`):**
+  - [x] Menambahkan tombol **"Gunakan Lokasi GPS Saya"** (`navigator.geolocation`) di atas/bawah peta kampus beserta penanganan error izin lokasi.
+- [x] **5.3 Pembersihan File Lama:**
+  - [x] Memindahkan atau menghapus file monolitik lama (`reportloop_campus_web_app.html` dan `reportloop_campus_web_app.backup.html`) jika masih ada setelah seluruh halaman modular terverifikasi.
+
+### Step 5B: Revisi Navigasi, Foto Profil, Kartu Laporan & Halaman Laporan Saya (satu langkah per persetujuan)
+- [ ] **5B.A Menu Header (`html/header.html`, `js/features/header.js`):**
+  - [x] Hamburger di HP, tombol avatar di desktop, panel akun (kartu identitas, Profil & Pengaturan Akun, Mode data, Keluar), dan tombol tema di header sudah ada.
+  - [ ] Menu Mahasiswa menjadi *Peta & Lapor*, *Papan Laporan*, *Laporan Saya* (saat ini baru dua item). Panel HP dan dropdown desktop memuat tema, mode data, dan Keluar sesuai gambar 1.
+- [ ] **5B.B Foto Profil (`js/features/profile.js`, `js/features/header.js`, `js/services/auth.js`):**
+  - [ ] Unggah, pangkas, dan pratinjau foto di halaman Profil & Pengaturan (validasi tipe dan ukuran, gambar diperkecil sebelum disimpan).
+  - [ ] Foto tampil di header, panel akun, dan kartu identitas, dengan inisial sebagai cadangan.
+  - [ ] Kontrak backend untuk unggah foto profil dicatat untuk Step 6.1.
+- [ ] **5B.C Kartu Laporan & Nama Tempat (`js/features/publicBoard.js`, `js/features/profile.js`, `js/data/seedReports.js`):**
+  - [ ] Koordinat dihapus dari semua kartu dan diganti nama tempat; tombol *Lihat di Peta* tetap ada (gambar 3).
+  - [ ] Field nama tempat ditambahkan ke data laporan (seed dan laporan baru), diturunkan dari titik cepat kampus terdekat; field baru dicatat untuk kontrak `Report` di Step 6.1.
+- [ ] **5B.D Papan Laporan Umum (`html/view-mahasiswa.html`, `js/features/publicBoard.js`):**
+  - [ ] Tab *Laporan saya* dan *Dukungan saya* dihapus dari papan.
+  - [ ] Kartu ringkasan status yang bisa diklik (Diterima, Diperbaiki, Selesai) sebagai filter, ditambah pencarian, chip kategori, dan grid kartu (gambar 2).
+- [ ] **5B.E Halaman Laporan Saya (`html/view-mahasiswa.html`, `js/features/profile.js`, `js/features/header.js`):**
+  - [ ] Halaman sendiri dengan tiga tab: *Laporan saya*, *Progres saya*, dan *Didukung*; pelacakan dan daftar didukung dipindah dari Profil.
+- [ ] **5B.F Dokumen & Pemeriksaan:**
+  - [ ] Perbarui `DESIGN.md`, `PRD.md`, `STACK.md`, dan `MIGRATION-REACT.md` sesuai A sampai E (`DESIGN.md` masih menyebut menu dua item, tanpa foto profil dan Laporan Saya).
+  - [ ] Jalankan pemeriksaan antislop (Delivery Gate) dan klik-through R-35 di dua tema dan breakpoint seluler.
 
 ### Step 6: Integrasi & Pengujian End-to-End dengan Backend FastAPI
 - [ ] **6.1 Kunci Kontrak API bersama Backend (Ibrahim Movik):**

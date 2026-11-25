@@ -2,7 +2,7 @@
 
 **Produk:** ReportLoop — Pelaporan Fasilitas Kampus Politeknik Negeri Indramayu  
 **Dial Desain:** `ENERGY 2 / RHYTHM 2 / MOTION 2`  
-**Referensi Struktur Visual:** Adaptasi komposisi editorial modern dari referensi visual (`image_433037.png`) ke dalam palet **Biru–Putih (Light Mode)** dan **Biru–Slate Gelap (Dark Mode)** yang bersih, terstruktur, dan bebas *AI slop*.
+**Referensi Struktur Visual:** Adaptasi komposisi editorial modern dengan palet **Biru–Putih (Light Mode)** dan **Biru–Slate Gelap (Dark Mode)** yang bersih, terstruktur, dan bebas *AI slop*.
 
 ---
 
@@ -14,7 +14,7 @@ Komposisi visual pada referensi gambar diterapkan secara fungsional untuk kebutu
    * **Sisi Kiri (Fokus Tipografi & Aksi):** Judul utama tegas dengan penekanan warna biru merek (`#1d4ed8` pada Light Mode / `#60a5fa` pada Dark Mode) pada frasa kunci (*"Dari Titik Lokasinya."*), deskripsi ringkas alur pelaporan, dan tombol aksi utama untuk masuk sebagai Mahasiswa (portal login Admin Sarpras diisolasi di URL/domain terpisah demi keamanan CIA).
    * **Sisi Kanan (Pratinjau Antarmuka & Bentuk Aksen Geometri):** Bingkai pratinjau aplikasi ReportLoop (peta kampus + kartu status laporan) di atas bidang aksen biru solid melengkung di sudut kanan atas — menjadi satu-satunya bidang aksen besar di halaman agar mata langsung tertuju pada pratinjau produk.
 2. **Ritme Section Bervariasi (`RHYTHM 2`):**
-   * **Bar Alur 3 Langkah Inti:** Ikon Heroicons berbingkai tipis di atas label ringkas (*1. Sematkan Titik Peta*, *2. Klasifikasi Otomatis NLP*, *3. Triase & Upvote Kolektif*).
+   * **Alur 3 Langkah Inti (Kartu Bertumpuk):** Tiga kartu bertumpuk dengan ikon Heroicons berbingkai tipis di atas label ringkas (*1. Sematkan Titik Peta*, *2. Klasifikasi Otomatis NLP*, *3. Triase & Upvote Kolektif*). Kartu paling atas digeser lewat sentuh layar atau seret mouse. Titik indikator di bawahnya bisa diklik, dan panah kiri/kanan keyboard juga berfungsi. Tidak ada tombol panah terpisah dan tidak ada geser otomatis.
    * **Section Split Tentang Sistem & Alur:** Penjelasan peran ganda (Mahasiswa Pelapor & Admin Sarpras) dengan daftar poin berikon centang dan pratinjau ringkasan status.
    * **Papan Laporan Publik Langsung (*Live Public Preview*):** Menampilkan kartu laporan nyata dari data aplikasi (bukan mockup statis), lengkap dengan indikator tahapan progres pengerjaan admin (`Diterima`, `Diperbaiki`, `Selesai`).
    * **Banner Aksi Penutup (*Callout Card*):** Kartu biru solid berujung membulat (`rounded-2xl`) di bagian bawah untuk ajakan langsung masuk/membuat laporan sebagai Mahasiswa.
@@ -125,6 +125,7 @@ Seluruh tampilan wajib tetap fungsional, nyaman disentuh, dan bebas *horizontal 
 
 * **Header Kompak 2 Tingkat (`html/header.html`):** Pada layar `< lg`, header disusun maksimal 2 baris vertikal (baris merek + kontrol cepat Profil/Tema/Keluar di atas; baris navigasi utama + tombol Mode Demo kompak di bawah) agar ruang vertikal viewport tetap lapang untuk konten utama.
 * **Menu Navigasi Rata Tengah & Akses Profil (`html/header.html`, `js/features/header.js`):** Daftar menu hanya berisi halaman kerja (Mahasiswa: *Peta & Lapor*, *Papan Laporan*; Admin Sarpras: *Antrean Triase*, *Peta Kampus*). Halaman Profil tidak lagi menjadi item menu karena sudah dibuka lewat tombol akun di pojok header (ikon profil pada layar `< lg`, avatar + nama pada `>= xl`; pada `lg` hanya avatar dengan `aria-label`). Pada layar `>= xl` header memakai grid `1fr auto 1fr` agar menu tepat di tengah halaman untuk peran Mahasiswa maupun Admin; pada `lg` memakai flex dengan menu rata tengah di ruang antara merek dan kontrol kanan, sedangkan label teks tombol Tema dan nama profil disembunyikan agar tidak meluap.
+* **Jarak Section Ringkas (`index.html`):** Section Alur Pelaporan dan Peran Sistem memakai `py-10` pada seluler dan `sm:py-12` dari `640px` ke atas, judul ke konten `mb-6`, dan kartu ke titik indikator `mt-4 sm:mt-5`. Dengan begitu kartu 3 langkah tidak terpisah jauh dari section di bawahnya di semua ukuran layar. Section Papan Publik tetap `py-14`.
 * **Tinggi Peta Adaptif (`css/map.css`):** Kontainer `#campus-map` menggunakan `height: clamp(220px, 38vh, 340px)` pada layar seluler dan `420px` pada desktop (`>= 1024px`) sehingga peta tetap nyaman disentuh tanpa mendorong formulir laporan terlalu jauh ke bawah.
 * **Perlindungan Luapan Teks & Koordinat (`css/base.css`, `view-mahasiswa.html`):**
   * Aturan global `overflow-x: hidden`, `overflow-wrap: anywhere`, dan `word-break: break-word` mencegah judul atau deskripsi tanpa spasi merusak lebar kartu, sementara elemen `.font-mono` dan input menjaga keterbacaan angka.

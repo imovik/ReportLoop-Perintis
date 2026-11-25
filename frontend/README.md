@@ -9,7 +9,7 @@
 
 ## Cara Menjalankan (Lokal)
 
-1. Buka folder `FE-ReportLoop` di VS Code.
+1. Buka folder `frontend` (sejajar dengan `backend` di repo tim) di VS Code.
 2. Jalankan melalui server HTTP lokal, misalnya:
    - Ekstensi **Live Server** di VS Code (klik *Go Live* pada `index.html`), atau
    - Terminal: `python -m http.server 5500` / `npx serve .`
@@ -56,7 +56,7 @@ Akun disimpan secara lokal di `localStorage` browser masing-masing.
 ## Struktur Direktori Saat Ini
 
 ```text
-FE-ReportLoop/
+frontend/
 ├── index.html          # Landing page & pratinjau papan laporan publik
 ├── css/                # Token warna Light/Dark (base.css) & styling peta (map.css)
 ├── html/               # Halaman peran, halaman auth, dan partial komponen UI
@@ -65,12 +65,14 @@ FE-ReportLoop/
 │   ├── config/         # Konstanta kampus, endpoint API, & konfigurasi Tailwind
 │   ├── data/           # Data dummy SEED_REPORTS untuk Mode Demo
 │   ├── state/          # Store state aplikasi
-│   ├── services/       # API client FastAPI, auth demo, kalkulasi geo 15m, & NLP
-│   ├── features/       # Kontroler UI (peta, foto, form, papan publik, panel admin)
+│   ├── services/       # API client FastAPI, auth (akun lokal + Google via backend), kalkulasi geo 15m, & NLP
+│   ├── features/       # Kontroler UI (peta, foto, form, papan publik, panel admin, carousel 3 langkah)
 │   └── utils/          # Theme toggle, toast, badge, sanitasi HTML, scroll reveal
 ├── PRD.md              # Spesifikasi kebutuhan produk frontend
 ├── DESIGN.md           # Panduan sistem desain Light/Dark Mode
 ├── STACK.md            # Arsitektur teknis & peta migrasi ke React
+â”œâ”€â”€ MIGRATION-REACT.md  # Rencana migrasi ke React + Vite & daftar endpoint
+â”œâ”€â”€ BACKEND-GOOGLE-AUTH.md # Panduan backend: kontrak & implementasi Google Auth
 └── CHECKLIST.md        # Checklist audit & roadmap pengerjaan
 ```
 

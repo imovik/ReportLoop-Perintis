@@ -33,15 +33,19 @@
 ## 3. Struktur Direktori & Peta Konversi ke React
 
 ```text
-FE-ReportLoop/
+frontend/
 ├── index.html                  # Landing & Papan Publik Read-Only (Hero + Alur + Live Board)
-├── user.html                   # Ruang Kerja Mahasiswa (Peta + Form Laporan + Papan Upvote)
-├── admin.html                  # Panel Triase Admin Sarpras (KPI + Antrean Prioritas + Peta)
-├── masuk.html / daftar.html    # Autentikasi Mahasiswa (NIM + Email Google, Google OAuth, Lupa Sandi, Ingat Saya 7 hari)
-├── admin-masuk.html / admin-daftar.html # Autentikasi Petugas Sarpras terisolasi (Email Google + Kode Undangan, Google OAuth, Lupa Sandi, Ingat Saya 7 hari; siap untuk subdomain khusus di produksi)
+├── html/user.html              # Ruang Kerja Mahasiswa (Peta + Form Laporan + Papan Upvote)
+├── html/admin.html             # Panel Triase Admin Sarpras (KPI + Antrean Prioritas + Peta)
+├── html/masuk.html, html/daftar.html # Autentikasi Mahasiswa (NIM + Email Google, Google OAuth, Lupa Sandi, Ingat Saya 7 hari)
+├── html/admin-masuk.html, html/admin-daftar.html # Autentikasi Petugas Sarpras terisolasi (Email Google + Kode Undangan, Google OAuth, Lupa Sandi, Ingat Saya 7 hari; siap untuk subdomain khusus di produksi)
 ├── PRD.md                      # Spesifikasi Kebutuhan Produk Frontend
 ├── DESIGN.md                   # Sistem Desain Blue-White Light/Dark Mode
 ├── STACK.md                    # Dokumentasi Arsitektur & Kontrak Teknis
+â”œâ”€â”€ README.md                   # Cara menjalankan, akun demo, & konfigurasi Google OAuth
+â”œâ”€â”€ CHECKLIST.md                # Checklist audit & roadmap pengerjaan
+â”œâ”€â”€ MIGRATION-REACT.md          # Rencana migrasi ke React + Vite & daftar endpoint
+â”œâ”€â”€ BACKEND-GOOGLE-AUTH.md      # Panduan backend untuk Google Auth (FastAPI)
 ├── css/
 │   ├── base.css                # Token warna Light/Dark, komponen tombol/form/badge, utilitas
 │   └── map.css                 # Dimensi kontainer Leaflet, pin target, & penyesuaian Dark Mode
@@ -62,7 +66,7 @@ FE-ReportLoop/
     │   └── store.js            # -> src/context/ReportContext.jsx / Zustand store
     ├── services/               # Logika murni tanpa akses DOM (100% reusable di React)
     │   ├── api.js              # -> src/services/api.js (Client REST FastAPI + Auth Header)
-    │   ├── auth.js             # -> src/services/auth.js (Sesi 8j/7h, Google OAuth, reset sandi, & validasi peran)
+    │   ├── auth.js             # -> src/services/auth.js (Sesi 8j/7h, Google OAuth via POST /api/auth/google, reset sandi, & validasi peran)
     │   ├── geo.js              # -> src/utils/geo.js (Rumus Haversine radius 15m)
     │   └── nlp.js              # -> src/utils/nlp.js (Simulasi prediksi kategori TF-IDF/NB)
     ├── features/               # Kontroler UI per modul (setara komponen pintar React)
@@ -73,6 +77,7 @@ FE-ReportLoop/
     │   ├── publicBoard.js      # Filter kategori/status, pencarian, tab dukungan, tracking progres admin, & kartu laporan
     │   ├── adminPanel.js       # Hitung KPI riil & render antrean triase Sarpras
     │   ├── duplicateModal.js   # Kontrol dialog aksesibel (Escape & Tab focus trap)
+    â”‚   â”œâ”€â”€ stepsCarousel.js    # Carousel kartu 3 langkah (geser sentuh, seret mouse, titik indikator)
     │   └── authPage.js         # Validasi form login/register, Google OAuth, modal lupa sandi, & Ingat Saya
     └── utils/
         ├── badges.js           # Pemetaan label & kelas warna status/kategori
@@ -91,7 +96,7 @@ FE-ReportLoop/
 * Tombol **Mode Data** di header melakukan pengecekan `GET /api/reports` dengan batas waktu `2500ms`. Jika server FastAPI aktif, state langsung beralih ke mode sinkronisasi penuh dengan PostgreSQL + PostGIS.
 
 ### 4.2 Kesiapan Token Autentikasi & Endpoint
-* `js/services/api.js` menyediakan pembungkus `authHeaders()` yang otomatis menyertakan `Authorization: Bearer <token>` apabila sesi memiliki token JWT dari backend.
+* `js/services/api.js` menyediakan pembungkus `buildAuthHeaders()` yang otomatis menyertakan `Authorization: Bearer <token>` apabila sesi memiliki token JWT dari backend. Token sesi Google didapat dari `POST /api/auth/google` (kontrak lengkap di `BACKEND-GOOGLE-AUTH.md`).
 * Seluruh panggilan jaringan menangani status HTTP standar FastAPI: `200 OK`, `201 Created`, `400 Bad Request` (`STALE_PHOTO_REJECTED`), dan `409 Conflict` (`DUPLICATE_NEARBY_REPORT`).
 
 ---

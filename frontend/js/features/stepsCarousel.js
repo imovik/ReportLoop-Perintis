@@ -6,7 +6,6 @@ export function initStepsCarousel() {
 
   const cards = Array.from(track.querySelectorAll('[data-step-card]'));
   const dots = Array.from(document.querySelectorAll('[data-step-dot]'));
-  const counterEl = document.querySelector('[data-step-counter]');
 
   const total = cards.length;
   if (!total) return;
@@ -39,10 +38,6 @@ export function initStepsCarousel() {
       dot.tabIndex = isCurrent ? 0 : -1;
       dot.classList.toggle('is-active', isCurrent);
     });
-
-    if (counterEl) {
-      counterEl.textContent = `0${activeIndex + 1} / 0${total}`;
-    }
   }
 
   function getTopCard() {
