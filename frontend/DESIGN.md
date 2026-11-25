@@ -49,9 +49,23 @@ Palet terang menggunakan *soft-white* (putih tidak terlalu putih/mencolok) untuk
 ### 2.3 Warna Status Fungsional (Konsisten di Kedua Tema)
 | Status | Light Mode (Latar / Teks) | Dark Mode (Latar / Teks) | Pin Peta |
 | :--- | :--- | :--- | :--- |
-| **Received (Diterima)** | `#fef3c7` / `#78350f` | `#451a03` / `#fcd34d` | `#d97706` |
-| **In Progress (Diperbaiki)** | `#dbeafe` / `#1e3a8a` | `#1e3a8a` / `#93c5fd` | `#2563eb` |
-| **Resolved (Selesai)** | `#dcfce7` / `#14532d` | `#052e16` / `#86efac` | `#16a34a` |
+| **Received (Diterima)** | `#fef3c7` / `#78350f` | `#451a03` / `#fcd34d` | `#b45309` |
+| **In Progress (Diperbaiki)** | `#dbeafe` / `#1e3a8a` | `#1e3a8a` / `#93c5fd` | `#1d4ed8` |
+| **Resolved (Selesai)** | `#dcfce7` / `#14532d` | `#052e16` / `#86efac` | `#15803d` |
+
+### 2.4 Token Pendukung (Galat, Netral Tambahan, Teks di Atas Merek)
+Didefinisikan di `css/base.css` pada `:root` dan `html.dark`. Warna galat hanya muncul pada keadaan error (teks galat, field tidak valid, tombol hapus/bahaya), bukan sebagai aksen dekoratif.
+| Token | Light Mode | Dark Mode | Fungsi |
+| :--- | :--- | :--- | :--- |
+| `--danger` | `#dc2626` | `#dc2626` | Garis field tidak valid, teks galat di mode terang |
+| `--danger-ink` | `#991b1b` | `#fca5a5` | Teks tombol bahaya dan teks galat di mode gelap |
+| `--danger-line` | `#fecaca` | `#7f1d1d` | Garis tepi tombol bahaya |
+| `--danger-soft` | `#fef2f2` | `#450a0a` | Latar hover tombol bahaya |
+| `--muted` | `#64748b` | `#94a3b8` | Teks placeholder input |
+| `--line-strong` | `#94a3b8` | `#94a3b8` | Garis tepi input saat hover |
+| `--on-brand` | `#ffffff` | `#ffffff` | Teks/ikon di atas bidang warna merek |
+
+Catatan: `.badge-cat` memakai `#e8eef7` (terang) dan `#1e293b` (gelap) sebagai latar kategori netral, dan beberapa aturan header mode gelap sengaja memakai nilai tetap agar kontras teks putih tetap di atas 4,5:1.
 
 ---
 
@@ -121,3 +135,29 @@ Seluruh tampilan wajib tetap fungsional, nyaman disentuh, dan bebas *horizontal 
   * Kartu ringkasan KPI pada panel admin (`view-admin.html`) memakai garis pemisah vertikal internal pada kolom ganjil (`border-r`) serta skala angka `text-2xl sm:text-3xl`.
 * **Posisi Toast Aman Layar Sempit (`html/header.html`):** Kontainer `#toast-container` memakai jangkar `left-3 right-3 bottom-4` pada layar `< 640px` dan `sm:right-5 sm:bottom-5 sm:max-w-sm` pada layar lebih besar agar notifikasi tidak pernah terpotong di tepi kiri layar.
 * **Komponen Pelacakan Progres Admin (User View):** Ditampilkan ringkas di dalam kartu laporan (`publicBoard.js`) dan daftar laporan pada halaman Profil (`profile.js`) menggunakan 3 tahap berurutan (`Diterima` -> `Diperbaiki` -> `Selesai`) dengan warna status yang sudah ditetapkan, garis penghubung netral (`1px solid var(--border)` atau aksen biru merek pada tahap aktif/selesai), radius `8px` pada blok rincian riwayat, serta tanpa animasi berulang atau badge hiasan berlebihan. Jika `status_history` kosong, tampilkan status berjalan secara jujur tanpa mengarang riwayat palsu.
+
+---
+
+## 8. Aturan Anti-AI-Slop Tambahan
+
+Melengkapi bagian 1 sampai 7 dan aturan `antislop` proyek. Setiap butir bisa diperiksa langsung pada kode.
+
+* **Aksen Warna:**
+  * Aksen hanya `--brand` (`#1d4ed8` / `#3b82f6`). Warna indigo/ungu bawaan Tailwind (`#6366f1`, `#4f46e5`, `#4338ca`, `#3730a3`, `#8b5cf6`, `#7c3aed`, `#a855f7`) tidak dipakai sebagai aksen.
+  * Tidak ada gradien dua warna pada hero atau banner (ungu ke biru, biru ke cyan, indigo ke pink). Bidang aksen tetap biru solid sesuai bagian 1.
+  * Aksen merek dipakai hemat: maksimal 2 titik sorotan per layar selain tombol aksi utama.
+  * Nilai heksadesimal ditulis sebagai token di `:root` dan `html.dark`. Heksadesimal mentah di luar token dihindari.
+* **Ikon & Dekorasi:**
+  * Emoji tidak dipakai sebagai ikon fitur, judul, tombol, atau daftar. Gunakan Heroicons inline SVG sesuai bagian 5.
+  * Tidak ada ikon generik tanpa relevansi (kilat, bintang, sparkle, robot, orb).
+  * Tidak ada bentuk blob, gelombang, atau latar kisi tanpa fungsi.
+* **Komponen:**
+  * Kartu tidak memakai garis tepi kiri berwarna bersama sudut membulat. Pilih salah satu: hapus garis kiri atau pakai radius standar bagian 4.
+  * Status ditandai badge status fungsional (bagian 2.3), bukan kapsul hiasan seperti "Baru" atau "AI Powered".
+* **Konten:**
+  * Tidak ada angka, persentase, atau klaim performa karangan (misalnya "10x lebih cepat", "99,9% aktif"). Angka hanya dari data laporan nyata.
+  * Tidak ada teks isian: `lorem ipsum`, "fitur satu/dua/tiga", "teks contoh". Bagian tanpa data memakai keadaan kosong yang jujur.
+  * Tombol aksi memakai kata kerja spesifik (*Buat Laporan Baru*, *Buka Papan Laporan*), bukan "Mulai" atau "Pelajari lebih lanjut".
+  * Tidak ada tanda pisah em (â€”) pada teks antarmuka baru. Pakai koma, titik, titik dua, atau tanda kurung.
+* **Gambar:** Tidak memakai CDN gambar placeholder eksternal (`unsplash.com`, `placehold.co`, `picsum.photos`). Gambar berasal dari `assets/img/` atau foto bukti laporan pengguna.
+* **Pemeriksaan Sebelum Rilis:** Setiap keputusan visual besar (warna, tata letak, tipografi, ikon) punya alasan satu kalimat. Jika tidak bisa dituliskan, keputusan itu ditinjau ulang.

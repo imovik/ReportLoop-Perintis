@@ -11,6 +11,13 @@
   --ink: #0f172a;
   --ink-soft: #475569;
   --line: #cbd5e1;
+  --line-strong: #94a3b8;
+  --muted: #64748b;
+  --on-brand: #ffffff;
+  --danger: #dc2626;
+  --danger-ink: #991b1b;
+  --danger-line: #fecaca;
+  --danger-soft: #fef2f2;
 }
 
 html.dark {
@@ -24,6 +31,10 @@ html.dark {
   --ink: #f8fafc;
   --ink-soft: #cbd5e1;
   --line: #1e293b;
+  --muted: #94a3b8;
+  --danger-ink: #fca5a5;
+  --danger-line: #7f1d1d;
+  --danger-soft: #450a0a;
 }
 
 html {
@@ -115,8 +126,8 @@ summary:focus-visible,
 
 /* Header aplikasi biru solid sebagai penanda identitas */
 .app-header {
-  background: #1d4ed8;
-  color: #ffffff;
+  background: var(--brand);
+  color: var(--on-brand);
 }
 html.dark .app-header {
   background: #0f172a;
@@ -152,8 +163,8 @@ html.dark .app-header {
   color: #ffffff;
 }
 .nav-link[aria-current='page'] {
-  background: #ffffff;
-  color: #1d4ed8;
+  background: var(--on-brand);
+  color: var(--brand);
 }
 html.dark .nav-link[aria-current='page'] {
   background: #1d4ed8;
@@ -196,7 +207,7 @@ html.dark .nav-link[aria-current='page'] {
 
 .btn-primary {
   background: var(--brand);
-  color: #ffffff;
+  color: var(--on-brand);
 }
 .btn-primary:hover:not(:disabled) {
   background: var(--brand-dark);
@@ -220,18 +231,11 @@ html.dark .btn-ghost:hover:not(:disabled) {
 
 .btn-danger-ghost {
   background: var(--surface);
-  color: #991b1b;
-  border-color: #fecaca;
+  color: var(--danger-ink);
+  border-color: var(--danger-line);
 }
 .btn-danger-ghost:hover:not(:disabled) {
-  background: #fef2f2;
-}
-html.dark .btn-danger-ghost {
-  color: #fca5a5;
-  border-color: #7f1d1d;
-}
-html.dark .btn-danger-ghost:hover:not(:disabled) {
-  background: #450a0a;
+  background: var(--danger-soft);
 }
 
 .btn-sm {
@@ -252,13 +256,10 @@ html.dark .btn-danger-ghost:hover:not(:disabled) {
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 .field::placeholder {
-  color: #64748b;
-}
-html.dark .field::placeholder {
-  color: #94a3b8;
+  color: var(--muted);
 }
 .field:hover {
-  border-color: #94a3b8;
+  border-color: var(--line-strong);
 }
 .field:focus {
   outline: none;
@@ -266,7 +267,7 @@ html.dark .field::placeholder {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.22);
 }
 .field[aria-invalid='true'] {
-  border-color: #dc2626;
+  border-color: var(--danger);
 }
 .field:disabled {
   background: var(--surface-muted);
@@ -295,10 +296,10 @@ html.dark .field::placeholder {
   margin-top: 0.25rem;
   font-size: 0.8125rem;
   font-weight: 600;
-  color: #dc2626;
+  color: var(--danger);
 }
 html.dark .error-text {
-  color: #fca5a5;
+  color: var(--danger-ink);
 }
 
 .chip {
@@ -321,7 +322,7 @@ html.dark .error-text {
 .chip[aria-pressed='true'] {
   background: var(--brand);
   border-color: var(--brand);
-  color: #ffffff;
+  color: var(--on-brand);
 }
 
 .tab {
