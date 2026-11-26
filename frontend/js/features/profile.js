@@ -11,6 +11,7 @@ import {
   setProfilePhoto,
   clearProfilePhoto,
 } from '../services/auth.js';
+import { getPreviousView } from './header.js';
 import { openAvatarCropper, validateAvatarFile } from './avatarCropper.js';
 import { escapeHtml } from '../utils/escapeHtml.js';
 import { showToast } from '../utils/toast.js';
@@ -33,8 +34,16 @@ export function renderProfilePanel(onSessionUpdated) {
     .join('')
     .toUpperCase();
 
+  const backView = getPreviousView(session.role);
+  const backLabel = isAdmin ? 'Kembali ke Antrean' : 'Kembali';
   const photo = getProfilePhoto(session);
   container.innerHTML = `
+    <div class="mb-4 flex items-center justify-between gap-2">
+      <button type="button" data-nav-view="${escapeHtml(backView)}" class="btn btn-sm btn-ghost">
+        <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+        <span>${escapeHtml(backLabel)}</span>
+      </button>
+    </div>
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       <!-- Kartu Identitas Akun -->
       <div class="lg:col-span-5 card p-5 sm:p-6 space-y-5">

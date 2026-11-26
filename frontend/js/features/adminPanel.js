@@ -189,7 +189,7 @@ export function renderAdminTable() {
   const queue = document.getElementById('admin-queue');
   if (sorted.length === 0) {
     const msg = emptyQueueMessage();
-    queue.innerHTML = `<div class="state-box"><strong>${msg.title}</strong>${msg.body}</div>`;
+    queue.innerHTML = `<div class="state-box"><strong>${escapeHtml(msg.title)}</strong>${escapeHtml(msg.body)}</div>`;
     return;
   }
 

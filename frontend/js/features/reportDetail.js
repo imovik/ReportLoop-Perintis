@@ -51,6 +51,7 @@ export function openReportDetail(id, { showUpvote = true } = {}) {
   const rep = state.reports.find((r) => String(r.id) === String(id));
   if (!rep) return;
 
+  const returnFocusEl = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   document.getElementById('report-detail-dialog')?.remove();
 
   const photo = resolvePhoto(rep);
@@ -99,6 +100,7 @@ export function openReportDetail(id, { showUpvote = true } = {}) {
       </div>
 
       <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+        <button type="button" id="report-detail-back" class="btn btn-ghost w-full sm:w-auto sm:mr-auto">Kembali</button>
         <button type="button" data-action="focus-map" data-lat="${escapeHtml(rep.latitude)}" data-lng="${escapeHtml(rep.longitude)}" class="btn btn-ghost w-full sm:w-auto">Lihat di Peta</button>
         ${
           showUpvote
@@ -110,18 +112,20 @@ export function openReportDetail(id, { showUpvote = true } = {}) {
   `;
   document.body.appendChild(dialog);
 
-  const close = () => {
+  const close = ({ restoreFocus = true } = {}) => {
     if (dialog.open) dialog.close();
     dialog.remove();
+    if (restoreFocus && returnFocusEl && returnFocusEl.isConnected) returnFocusEl.focus();
   };
-  dialog.querySelector('#report-detail-close').addEventListener('click', close);
+  dialog.querySelector('#report-detail-close').addEventListener('click', () => close());
+  dialog.querySelector('#report-detail-back').addEventListener('click', () => close());
   // Klik di luar panel (pada backdrop) menutup dialog
   dialog.addEventListener('click', (e) => {
     if (e.target === dialog) close();
   });
   // Aksi Lihat di Peta dan Dukung ditangani delegasi global di main.js, dialog ditutup sesudahnya
   dialog.addEventListener('click', (e) => {
-    if (e.target.closest('[data-action]')) setTimeout(close, 0);
+    if (e.target.closest('[data-action]')) setTimeout(() => close({ restoreFocus: false }), 0);
   });
   dialog.addEventListener('close', () => dialog.remove());
 

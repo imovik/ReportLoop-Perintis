@@ -113,7 +113,10 @@
           <h1 class="text-xl sm:text-2xl font-extrabold text-ink-900 dark:text-white">Papan laporan kampus</h1>
           <p id="board-summary" class="text-sm text-ink-600 dark:text-ink-300" aria-live="polite"></p>
         </div>
-        <button type="button" data-nav-view="lapor" class="btn btn-sm btn-primary w-full sm:w-auto sm:shrink-0">Buat Laporan Baru</button>
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:shrink-0">
+          <button type="button" data-nav-view="lapor" class="btn btn-sm btn-ghost w-full sm:w-auto">Kembali ke Peta &amp; Lapor</button>
+          <button type="button" data-nav-view="lapor" class="btn btn-sm btn-primary w-full sm:w-auto">Buat Laporan Baru</button>
+        </div>
       </div>
 
       <div id="status-summary" class="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3" role="group" aria-label="Ringkasan status laporan"></div>
@@ -147,7 +150,10 @@
   <div id="page-laporan-saya" data-page="laporan-saya" class="hidden card overflow-hidden">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-ink-200 dark:border-ink-800 px-3 sm:px-5 pt-1 sm:pt-0 pb-2.5 sm:pb-0">
       <div id="myreports-tabs" class="flex w-full sm:w-auto overflow-x-auto no-scrollbar border-b sm:border-b-0 border-ink-200 dark:border-ink-800 -mx-3 px-3 sm:mx-0 sm:px-0" role="tablist" aria-label="Laporan saya"></div>
-      <button type="button" data-nav-view="lapor" class="btn btn-sm btn-primary w-full sm:w-auto sm:my-2">Buat Laporan Baru</button>
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:my-2">
+        <button type="button" data-nav-view="lapor" class="btn btn-sm btn-ghost w-full sm:w-auto">Kembali ke Peta &amp; Lapor</button>
+        <button type="button" data-nav-view="lapor" class="btn btn-sm btn-primary w-full sm:w-auto">Buat Laporan Baru</button>
+      </div>
     </div>
 
     <div class="p-4 sm:p-6">

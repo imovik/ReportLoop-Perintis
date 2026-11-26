@@ -32,9 +32,12 @@
     <section class="app-header relative overflow-hidden px-6 py-8 sm:px-10 lg:px-14 lg:py-12 flex flex-col justify-between gap-10">
       <div class="relative z-10 flex items-center justify-between gap-3">
         <a href="../index.html" class="text-xl font-extrabold tracking-tight hover:opacity-90">ReportLoop</a>
-        <button type="button" data-theme-toggle aria-pressed="false" aria-label="Beralih ke mode gelap" class="lg:hidden nav-link border border-white/35 px-2.5">
-          <span data-theme-icon></span>
-        </button>
+        <div class="flex items-center gap-2 lg:hidden">
+          <a href="../index.html" class="nav-link border border-white/35 px-2.5">Beranda</a>
+          <button type="button" data-theme-toggle aria-pressed="false" aria-label="Beralih ke mode gelap" class="nav-link border border-white/35 px-2.5">
+            <span data-theme-icon></span>
+          </button>
+        </div>
       </div>
 
       <div class="relative z-10 max-w-md">
@@ -42,7 +45,7 @@
           Lihat fasilitas kampus yang rusak? Laporkan dari titik lokasinya.
         </h1>
         <p class="mt-4 text-base text-blue-100 leading-relaxed">
-          Pilih lokasi di peta, lampirkan foto yang baru diambil, dan tim Sarpras Politeknik Negeri Indramayu menerima laporan Anda. Laporan yang sama di titik yang sama digabung lewat dukungan, bukan dikirim dua kali.
+          Sematkan titik lokasi, unggah foto baru, dan kirim ke Sarpras Polindra. Dukungan menambah prioritas laporan yang sudah ada.
         </p>
       </div>
 
@@ -53,7 +56,7 @@
         class="pointer-events-none select-none absolute bottom-0 right-0 w-[92%] sm:w-[82%] max-w-[540px] object-contain opacity-[0.17] mix-blend-luminosity translate-y-2 translate-x-2"
       />
 
-      <div class="relative z-10 flex items-center justify-between gap-4 text-sm text-blue-100">
+      <div class="relative z-10 hidden lg:flex items-center justify-between gap-4 text-sm text-blue-100">
         <span>Politeknik Negeri Indramayu</span>
         <a href="../index.html" class="underline underline-offset-2 hover:text-white">Kembali ke Beranda</a>
       </div>

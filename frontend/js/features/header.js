@@ -37,14 +37,23 @@ const ROLE_TEXT = {
 };
 
 let activeView = null;
+let previousView = null;
 
 export function getActiveView() {
   return activeView;
 }
 
+export function getPreviousView(role = document.body.dataset.role) {
+  return previousView || DEFAULT_VIEW[role] || 'lapor';
+}
+
 export function switchView(role, viewId, { updateHash = true } = {}) {
   const validViews = [...(NAV_ITEMS[role] || []).map((item) => item.view), PROFILE_VIEW];
-  const targetView = validViews.includes(viewId) ? viewId : DEFAULT_VIEW[role];
+  const requestedView = viewId === 'home' ? DEFAULT_VIEW[role] : viewId;
+  const targetView = validViews.includes(requestedView) ? requestedView : DEFAULT_VIEW[role];
+  if (activeView && activeView !== targetView && activeView !== PROFILE_VIEW) {
+    previousView = activeView;
+  }
   activeView = targetView;
 
   // Tampilkan hanya section [data-page] yang dipilih
@@ -86,6 +95,12 @@ export function switchView(role, viewId, { updateHash = true } = {}) {
 }
 
 export function renderNav(role) {
+  const brandLink = document.getElementById('brand-home-link');
+  if (brandLink) {
+    brandLink.setAttribute('href', `#${DEFAULT_VIEW[role] || 'lapor'}`);
+    brandLink.setAttribute('aria-label', `ReportLoop, kembali ke ${NAV_ITEMS[role]?.[0]?.label || 'beranda kerja'}`);
+  }
+
   const list = document.getElementById('app-nav');
   if (!list) return;
 
@@ -265,6 +280,7 @@ export function bindHeaderEvents(renderAll, session) {
   document.addEventListener('click', (event) => {
     const navBtn = event.target.closest('[data-nav-view]');
     if (!navBtn) return;
+    if (navBtn.tagName === 'A') event.preventDefault();
     const targetView = navBtn.dataset.navView;
     switchView(session.role, targetView);
   });
