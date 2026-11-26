@@ -11,6 +11,7 @@ import { renderReportCard, isUserReport } from './publicBoard.js';
 
 const TABS = [
   { id: 'mine', label: 'Laporan saya' },
+  { id: 'updates', label: 'Pembaruan' },
   { id: 'supported', label: 'Didukung' },
 ];
 
@@ -39,29 +40,68 @@ function supportedReports() {
   return state.reports.filter((r) => state.upvotedIds.has(r.id));
 }
 
-function summaryCell(label, value, tone) {
-  return `
-    <div class="rounded-xl border border-ink-200 dark:border-ink-800 p-3 sm:p-4">
-      <dt class="text-xs font-semibold text-ink-600 dark:text-ink-300">${escapeHtml(label)}</dt>
-      <dd class="mt-1 text-2xl font-extrabold font-mono ${tone}">${value}</dd>
-    </div>`;
+function formatDateTime(value) {
+  const t = Date.parse(value);
+  if (!Number.isFinite(t)) return '';
+  return new Date(t).toLocaleString('id-ID', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 }
 
-// Ringkasan aktivitas milik user yang sedang masuk, bukan total seluruh kampus.
+// Perubahan status nyata dari status_history laporan milik user, terbaru di atas
+function collectUpdates(own) {
+  const entries = [];
+  own.forEach((rep) => {
+    (Array.isArray(rep.status_history) ? rep.status_history : []).forEach((h) => {
+      if (h && h.to && Number.isFinite(Date.parse(h.at))) entries.push({ rep, h });
+    });
+  });
+  return entries.sort((a, b) => Date.parse(b.h.at) - Date.parse(a.h.at));
+}
+
+function renderUpdatesTimeline(updates) {
+  if (updates.length === 0) {
+    return `
+      <div class="state-box">
+        <strong>Belum ada perubahan status</strong>
+        Saat petugas Sarpras memperbarui status laporan Anda, perubahannya muncul di sini.
+      </div>`;
+  }
+  return `<ol class="card divide-y divide-ink-200 dark:divide-ink-800">${updates
+    .map(
+      ({ rep, h }) => `
+      <li class="p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-3">
+        <div class="min-w-0">
+          <p class="text-sm font-bold text-ink-900 dark:text-white truncate">${escapeHtml(rep.title)}</p>
+          <p class="text-sm text-ink-600 dark:text-ink-300">Status menjadi <strong>${escapeHtml(STATUS_LABEL[h.to] || h.to)}</strong></p>
+        </div>
+        <time datetime="${escapeHtml(h.at)}" class="text-xs text-ink-600 dark:text-ink-300 shrink-0">${escapeHtml(formatDateTime(h.at))}</time>
+      </li>`
+    )
+    .join('')}</ol>`;
+}
+
+// Ringkasan milik user yang sedang masuk (bukan total kampus); tiap kartu menjadi filter status.
 function renderSummary(own) {
   const el = document.getElementById('myreports-summary');
   if (!el) return;
-  const count = (status) => own.filter((r) => r.status === status).length;
-  const received = own.reduce((sum, r) => sum + (Number(r.upvotes) || 0), 0);
-  const plain = 'text-ink-900 dark:text-white';
-  el.innerHTML = [
-    summaryCell('Laporan saya', own.length, plain),
-    summaryCell('Diterima', count('Received'), plain),
-    summaryCell('Diperbaiki', count('In Progress'), 'text-brand-700 dark:text-brand-400'),
-    summaryCell('Selesai', count('Resolved'), 'text-green-700 dark:text-green-400'),
-    summaryCell('Dukungan diterima', received, plain),
-    summaryCell('Laporan didukung', state.upvotedIds.size, plain),
-  ].join('');
+  el.innerHTML = STATUS_CHIPS.map(({ key, label }) => {
+    const count = key === 'ALL' ? own.length : own.filter((r) => r.status === key).length;
+    const active = statusFilter === key;
+    const tone = active
+      ? 'border-brand-700 bg-brand-50 dark:border-brand-400 dark:bg-brand-950/80'
+      : 'border-ink-200 dark:border-ink-800 hover:border-ink-400 dark:hover:border-ink-600';
+    return `
+      <button type="button" data-myreports-status="${escapeHtml(key)}" aria-pressed="${active}"
+        class="min-h-[44px] w-full rounded-xl border ${tone} p-3 text-left">
+        <span class="block text-xs font-semibold text-ink-600 dark:text-ink-300">${escapeHtml(key === 'ALL' ? 'Semua laporan' : label)}</span>
+        <span class="mt-0.5 block text-2xl font-extrabold font-mono text-ink-900 dark:text-white">${count}</span>
+      </button>`;
+  }).join('');
 }
 
 function renderStatusChips(own) {
@@ -101,7 +141,35 @@ export function setMyReportsTab(tab) {
   renderMyReports();
 }
 
+// Render hanya saat halaman Laporan Saya terbuka; fokus keyboard dipertahankan setelah aksi pada kartu.
 export function renderMyReports() {
+  const page = document.getElementById('page-laporan-saya');
+  if (page && page.classList.contains('hidden')) return;
+
+  const panel = document.getElementById('myreports-panel');
+  const active = document.activeElement;
+  let key = null;
+  if (panel && active && panel.contains(active)) {
+    const actionEl = active.closest('[data-action]');
+    if (actionEl) key = { action: actionEl.dataset.action, id: actionEl.dataset.id };
+  }
+
+  renderMyReportsContent();
+
+  if (!key || !panel) return;
+  const next = [...panel.querySelectorAll('[data-action]')].find(
+    (el) => el.dataset.action === key.action && el.dataset.id === key.id
+  );
+  if (next) {
+    next.focus();
+  } else {
+    // Kartu hilang (misalnya batal dukungan di tab Didukung): fokus pindah ke panel
+    panel.setAttribute('tabindex', '-1');
+    panel.focus();
+  }
+}
+
+function renderMyReportsContent() {
   const tabsEl = document.getElementById('myreports-tabs');
   const panel = document.getElementById('myreports-panel');
   if (!tabsEl || !panel) return;
@@ -109,7 +177,8 @@ export function renderMyReports() {
   // Daftar disaring sekali per render
   const own = ownReports();
   const supported = supportedReports();
-  const counts = { mine: own.length, supported: supported.length };
+  const updates = collectUpdates(own);
+  const counts = { mine: own.length, updates: updates.length, supported: supported.length };
 
   renderSummary(own);
   tabsEl.innerHTML = TABS.map((t) => {
@@ -121,6 +190,11 @@ export function renderMyReports() {
   // Toolbar hanya untuk tab Laporan saya
   const toolbar = document.getElementById('myreports-toolbar');
   if (toolbar) toolbar.classList.toggle('hidden', activeTab !== 'mine');
+
+  if (activeTab === 'updates') {
+    panel.innerHTML = renderUpdatesTimeline(updates);
+    return;
+  }
 
   let items = activeTab === 'supported' ? supported : own;
   const sortBy = document.getElementById('myreports-sort')?.value || 'newest';
@@ -178,13 +252,20 @@ export function bindMyReportsEvents() {
     document.getElementById(`myreports-tab-${TABS[next].id}`)?.focus();
   });
 
-  document.getElementById('myreports-status-chips')?.addEventListener('click', (event) => {
-    const chip = event.target.closest('[data-myreports-status]');
-    if (!chip) return;
-    statusFilter = chip.dataset.myreportsStatus;
+  // Kartu ringkasan dan chip status memakai state filter yang sama
+  const onStatusClick = (event) => {
+    const btn = event.target.closest('[data-myreports-status]');
+    if (!btn) return;
+    const container = btn.parentElement?.id;
+    statusFilter = btn.dataset.myreportsStatus;
+    if (activeTab !== 'mine') activeTab = 'mine';
     renderMyReports();
-    document.querySelector(`[data-myreports-status="${statusFilter}"]`)?.focus();
-  });
+    document
+      .querySelector(`#${container} [data-myreports-status="${statusFilter}"]`)
+      ?.focus();
+  };
+  document.getElementById('myreports-status-chips')?.addEventListener('click', onStatusClick);
+  document.getElementById('myreports-summary')?.addEventListener('click', onStatusClick);
   document.getElementById('myreports-search')?.addEventListener('input', renderMyReports);
   document.getElementById('myreports-sort')?.addEventListener('change', renderMyReports);
 }

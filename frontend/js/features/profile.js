@@ -102,7 +102,7 @@ export function renderProfilePanel(onSessionUpdated) {
           ${
             !isAdmin
               ? `<div>
-                  <label for="profile-input-email" class="label">Email Google (untuk pemulihan sandi & OAuth)</label>
+                  <label for="profile-input-email" class="label">Email Pemulihan</label>
                   <input id="profile-input-email" type="email" required placeholder="nama@gmail.com" value="${escapeHtml(session.email || '')}" class="field" />
                 </div>`
               : ''

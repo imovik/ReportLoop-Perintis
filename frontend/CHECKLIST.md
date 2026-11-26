@@ -119,18 +119,18 @@ Temuan evaluasi (`js/features/myReports.js`, `html/view-mahasiswa.html`), semua 
 - [x] **5E.A Gabung Tab & Chip Status (`js/features/myReports.js`, `html/view-mahasiswa.html`):**
   - [x] Gabung *Laporan saya* dan *Progres saya* menjadi satu tab *Laporan saya* dengan chip status (Semua, Diterima, Diperbaiki, Selesai), pencarian, dan urutan; pelacak cukup di dialog detail. Pemeriksaan statis: semua id `myreports-*` ada di markup dan impor dari `publicBoard.js` punya ekspor pasangannya. Verifikasi browser belum dijalankan.
   - [x] Tab *Didukung* dipertahankan.
-- [ ] **5E.B Tab Pembaruan (`js/features/myReports.js`):**
-  - [ ] Garis waktu perubahan status pada laporan milik pengguna dari `status_history` nyata (laporan, status baru, waktu), terbaru di atas.
-  - [ ] Keadaan kosong jujur bila belum ada perubahan status; tidak ada riwayat karangan.
-- [ ] **5E.C Kartu Ringkasan Bisa Diklik:**
-  - [ ] Empat kartu (Semua, Diterima, Diperbaiki, Selesai) menjadi filter seperti di Papan, dengan `aria-pressed`.
-  - [ ] Kartu *Dukungan diterima* dan *Laporan didukung* dihapus.
+- [x] **5E.B Tab Pembaruan (`js/features/myReports.js`):**
+  - [x] Garis waktu perubahan status pada laporan milik pengguna dari `status_history` nyata (laporan, status baru, waktu), terbaru di atas. Pemeriksaan statis: `node --check` lolos. Verifikasi browser belum dijalankan.
+  - [x] Keadaan kosong jujur bila belum ada perubahan status; tidak ada riwayat karangan.
+- [x] **5E.C Kartu Ringkasan Bisa Diklik:**
+  - [x] Empat kartu (Semua, Diterima, Diperbaiki, Selesai) menjadi filter seperti di Papan, dengan `aria-pressed`. Pemeriksaan statis: `node --check` lolos. Verifikasi browser belum dijalankan.
+  - [x] Kartu *Dukungan diterima* dan *Laporan didukung* dihapus.
 - [ ] **5E.D Penanda Pembaruan Baru (opsional; `js/features/header.js`, `js/features/myReports.js`):**
   - [ ] Titik kecil pada menu Laporan Saya bila ada perubahan status yang belum dilihat; penanda terakhir dilihat di `localStorage`.
   - [ ] Di dokumen ditulis sebagai penanda lokal, bukan notifikasi real-time (notifikasi tetap Final Day di `PRD.md`).
-- [ ] **5E.E Efisiensi Render (`js/main.js`, `js/features/myReports.js`):**
-  - [ ] Render hanya saat halaman Laporan Saya terbuka; daftar disaring sekali per render.
-  - [ ] Fokus keyboard dipertahankan setelah Dukung/Batalkan dukungan.
+- [x] **5E.E Efisiensi Render (`js/main.js`, `js/features/myReports.js`, `js/features/header.js`):**
+  - [x] Render hanya saat halaman Laporan Saya terbuka (dilewati bila `#page-laporan-saya` tersembunyi, dan dirender ulang saat `switchView` membuka halaman itu); daftar disaring sekali per render. Pemeriksaan statis: `node --check` lolos pada `myReports.js` dan `header.js`. Verifikasi browser belum dijalankan.
+  - [x] Fokus keyboard dipertahankan setelah Dukung/Batalkan dukungan (tombol dicari ulang berdasarkan `data-action` dan `data-id`; bila kartu hilang, fokus pindah ke panel).
 - [ ] **5E.F Dokumen & Pemeriksaan:** selaraskan `DESIGN.md` (7A), `PRD.md` (FR-05), `STACK.md`, `MIGRATION-REACT.md`, dan `CHECKLIST.md`; pemeriksaan antislop statis; verifikasi browser (tab, filter, keadaan kosong, dua tema, 320px) oleh Izzz.
 - Ditunda (butuh kontrak backend, Step 6.1): edit atau batalkan laporan sendiri selama berstatus *Diterima*, dan notifikasi push.
 

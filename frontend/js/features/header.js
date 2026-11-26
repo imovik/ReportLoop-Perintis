@@ -9,6 +9,7 @@ import { logout, ROLE_LOGIN, getProfilePhoto } from '../services/auth.js';
 import { showToast } from '../utils/toast.js';
 import { focusMapOn } from './map.js';
 import { renderProfilePanel } from './profile.js';
+import { renderMyReports } from './myReports.js';
 
 // Halaman profil dibuka lewat tombol akun di pojok header, bukan dari daftar menu
 const PROFILE_VIEW = 'profil';
@@ -75,6 +76,10 @@ export function switchView(role, viewId, { updateHash = true } = {}) {
 
   if (targetView === 'profil') {
     renderProfilePanel(renderSession);
+  }
+
+  if (targetView === 'laporan-saya') {
+    renderMyReports();
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
