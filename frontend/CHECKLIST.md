@@ -131,7 +131,12 @@ Temuan evaluasi (`js/features/myReports.js`, `html/view-mahasiswa.html`), semua 
 - [x] **5E.E Efisiensi Render (`js/main.js`, `js/features/myReports.js`, `js/features/header.js`):**
   - [x] Render hanya saat halaman Laporan Saya terbuka (dilewati bila `#page-laporan-saya` tersembunyi, dan dirender ulang saat `switchView` membuka halaman itu); daftar disaring sekali per render. Pemeriksaan statis: `node --check` lolos pada `myReports.js` dan `header.js`. Verifikasi browser belum dijalankan.
   - [x] Fokus keyboard dipertahankan setelah Dukung/Batalkan dukungan (tombol dicari ulang berdasarkan `data-action` dan `data-id`; bila kartu hilang, fokus pindah ke panel).
-- [ ] **5E.F Dokumen & Pemeriksaan:** selaraskan `DESIGN.md` (7A), `PRD.md` (FR-05), `STACK.md`, `MIGRATION-REACT.md`, dan `CHECKLIST.md`; pemeriksaan antislop statis; verifikasi browser (tab, filter, keadaan kosong, dua tema, 320px) oleh Izzz.
+- [x] **5E.F Dokumen & Pemeriksaan (sebagian):**
+  - [x] `DESIGN.md` (Laporan Saya, kartu, dialog detail), `PRD.md` (FR-05), `STACK.md` (`myReports.js`), `MIGRATION-REACT.md` (butir 6), dan komentar di `view-mahasiswa.html` diselaraskan dengan 5E.A sampai 5E.E (tab Laporan saya, Pembaruan, Didukung; pelacak hanya di dialog detail).
+  - [x] Pemeriksaan antislop statis: tidak ada em dash di `js/`, `html/`, dan `index.html`; tidak ada `indigo-`, `purple-`, `violet-`, atau `#6366f1` di kode.
+  - [ ] Verifikasi browser (tab, filter, keadaan kosong, dua tema, 320px) oleh Izzz. Belum dijalankan.
+  - [ ] Nama token di `DESIGN.md` bagian 2 (`--bg-subtle`, `--text-primary`, `--text-secondary`) belum disamakan dengan `base.css` (`--brand-soft`, `--ink`, `--ink-soft`).
+  - [ ] Pemeriksaan emoji pada teks antarmuka belum dilakukan.
 - Ditunda (butuh kontrak backend, Step 6.1): edit atau batalkan laporan sendiri selama berstatus *Diterima*, dan notifikasi push.
 
 ### Step 6: Integrasi & Pengujian End-to-End dengan Backend FastAPI

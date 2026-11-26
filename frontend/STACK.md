@@ -78,7 +78,7 @@ frontend/
     │   ├── publicBoard.js      # Kartu ringkasan status sebagai filter, filter kategori, pencarian, tracking progres admin, & kartu laporan ringkas (foto, status, judul, nama tempat, dukungan; judul kartu membuka dialog detail)
     │   ├── adminPanel.js       # Hitung KPI riil & render antrean triase Sarpras
     │   ├── duplicateModal.js   # Kontrol dialog aksesibel (Escape & Tab focus trap)
-    â”‚   â”œâ”€â”€ myReports.js        # Halaman Laporan Saya: tab Laporan saya, Progres saya, Didukung
+    â”‚   â”œâ”€â”€ myReports.js        # Halaman Laporan Saya: tab Laporan saya (kartu ringkasan & chip status sebagai filter, pencarian, urutan), Pembaruan (garis waktu status_history), Didukung; render hanya saat halaman terbuka
     â”‚   â”œâ”€â”€ avatarCropper.js    # Dialog pangkas foto profil (geser, zoom, keyboard) -> JPEG 256x256
     â”‚   â”œâ”€â”€ reportDetail.js     # Dialog detail laporan (<dialog> native, animasi muncul 350ms): deskripsi lengkap, nama tempat, meter dukungan, progres & riwayat status, aksi Dukung dan Lihat di Peta
     â”‚   â”œâ”€â”€ stepsCarousel.js    # Carousel kartu 3 langkah (geser sentuh, seret mouse, titik indikator)
