@@ -10,6 +10,7 @@ import { DUPLICATE_RADIUS_METERS, CAMPUS_BOUNDARY } from '../config/constants.js
 import { state } from '../state/store.js';
 import { predictNlpCategory } from '../services/nlp.js';
 import { haversineDistanceMeters, isPointInPolygon } from '../services/geo.js';
+import { getPlaceName } from '../services/places.js';
 import { postReport, postUpvote, deleteUpvote, patchReportStatus } from '../services/api.js';
 import { getSession } from '../services/auth.js';
 import { showToast } from '../utils/toast.js';
@@ -78,6 +79,7 @@ export function finalizeCreateReport(payload, renderAll) {
     photo_verification: 'Foto kamera baru',
     latitude: payload.latitude,
     longitude: payload.longitude,
+    place_name: getPlaceName({ latitude: payload.latitude, longitude: payload.longitude }),
     category: payload.nlp.category,
     nlp_confidence: payload.nlp.confidence,
     status: 'Received',

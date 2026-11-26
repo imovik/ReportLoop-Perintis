@@ -11,7 +11,7 @@ Dokumen ini adalah panduan kerja langkah demi langkah untuk memindahkan frontend
 3. Mode demo dihapus secara bertahap; backend menjadi satu-satunya sumber kebenaran.
 4. Tiap step punya Definition of Done (DoD) yang bisa diverifikasi lewat build, klik, atau uji API.
 
-**Hasil audit kesiapan:** struktur FE sekitar 75% siap. Lapisan integrasi BE (`services/api.js`, kontrak OAuth di `services/auth.js`, `data/seedReports.js`) sudah rapi dan hampir tinggal dipindah. Bagian yang menentukan kecepatan adalah konversi 10 file di `js/features/` yang imperatif dan penuh `document.getElementById`.
+**Hasil audit kesiapan:** struktur FE sekitar 75% siap. Lapisan integrasi BE (`services/api.js`, kontrak OAuth di `services/auth.js`, `data/seedReports.js`) sudah rapi dan hampir tinggal dipindah. Bagian yang menentukan kecepatan adalah konversi 12 file di `js/features/` yang imperatif dan penuh `document.getElementById`.
 
 ---
 
@@ -31,9 +31,10 @@ Migrasi tanpa kontrak yang dikunci akan memaksa refactor dua kali. Selesaikan in
 | POST | `/api/auth/google` | Masuk/daftar Google | Body `{credential, role, nim, invite_code}`, error 422 `NIM_REQUIRED` / `INVITE_REQUIRED` |
 
 - [ ] Status backend saat ini (`backend/main.py`): rute yang sudah ada `GET /`, `GET /api/reports`, `POST /api/reports`, `POST /api/reports/{id}/upvote`, dan `PATCH /api/reports/{id}/status`. Belum ada: `DELETE /api/reports/{id}/upvote` (sudah dipanggil FE lewat `deleteUpvote`) dan `POST /api/auth/google`. Penolakan `403` untuk non-admin pada rute status belum diperiksa.
-- [ ] Pastikan field `Report` identik dengan skema PostGIS. Patokan FE: `id, title, description, photo_url, photo_verification, latitude, longitude, category, nlp_confidence, status, upvotes, created_at, user_id, reporter_name, status_history`.
+- [ ] Pastikan field `Report` identik dengan skema PostGIS. Patokan FE: `id, title, description, photo_url, photo_verification, latitude, longitude, category, nlp_confidence, status, upvotes, created_at, user_id, reporter_name, status_history`, ditambah `place_name` (opsional, nama tempat kampus; bila kosong FE menurunkannya dari titik terdekat).
 - [ ] Pastikan kode error `400 STALE_PHOTO_REJECTED` dan `409 DUPLICATE_NEARBY_REPORT` stabil. FE sudah punya modal duplikat radius 15 m; putuskan backend sebagai sumber kebenaran utama, modal FE hanya fallback mode demo.
 - [ ] Sepakati endpoint auth non-Google (login/daftar/reset password) kalau mode demo mau dibuang sepenuhnya.
+- [ ] Sepakati endpoint foto profil (unggah, ambil, hapus) dan field URL fotonya. Di mode demo foto hanya tersimpan di `localStorage` per akun, jadi tanpa endpoint ini foto tidak ikut berpindah perangkat.
 - [ ] CORS di backend mengizinkan origin dev React (`http://localhost:5173`) dan origin produksi.
 
 **DoD Step 0:** dokumen kontrak 1 halaman disepakati kedua pihak, contoh response JSON per endpoint tertempel di dokumen itu.
@@ -139,7 +140,7 @@ Ini step paling sensitif karena `services/auth.js` punya dua sumber kebenaran: d
 
 Urutan konversi dari termudah ke tersulit:
 
-1. `publicBoard.js` -> `PublicBoard.jsx`: grid kartu, filter status/kategori, pencarian, sortir, tab cakupan (semua vs milik sendiri, logika filter `user_id` dari Step 4 checklist FE lama dipertahankan). State dari Zustand, event handler inline ala React.
+1. `publicBoard.js` -> `PublicBoard.jsx`: grid kartu, kartu ringkasan status yang menjadi filter, filter kategori, pencarian, sortir, dan nama tempat pada kartu lewat `getPlaceName`. Kartu dibuat ringkas (foto, status, kategori, judul, nama tempat, dukungan, tombol Dukung), jadi `ReportCard` cukup menerima `report` dan opsi `showUpvote` serta `showTracking`, tanpa `maxUpvotes`; meter dukungan dan deskripsi hanya dirender di `ReportDetailDialog.jsx`. Papan tidak lagi punya tab cakupan; laporan milik sendiri dan dukungan pindah ke halaman Laporan Saya. State dari Zustand, event handler inline ala React.
 2. `reportForm.js` + `photo.js` -> `ReportForm.jsx`:
    - Validasi foto (tipe `image/jpeg|png|webp`, maks 5 MB) dipindah apa adanya.
    - Aturan foto live wajib dan blokir `isStalePhoto` tetap aktif, diselaraskan dengan penolakan backend `400 STALE_PHOTO_REJECTED`.
@@ -150,6 +151,10 @@ Urutan konversi dari termudah ke tersulit:
    - Tombol "Gunakan Lokasi GPS Saya" memanggil `navigator.geolocation`, dengan state loading/error terpisah (R-27: tiap UI berdata wajib punya empty/loading/error state).
 4. `duplicateModal.js` -> `DuplicateModal.jsx`: logika fokus trap dan Escape dipertahankan; fokus dikembalikan ke elemen pemicu setelah tutup.
 5. `profile.js` -> `ProfilePanel.jsx`: form nama/email memanggil endpoint BE (atau endpoint profil hasil Step 0), bukan menulis localStorage.
+6. `myReports.js` -> `MyReportsPage.jsx`: tiga tab (*Laporan saya*, *Progres saya*, *Didukung*) memakai pola tablist yang sama (panah kiri/kanan, `aria-selected`). Filter kepemilikan memakai `isUserReport` (`user_id`), dan komponen pelacak progres dipakai bersama dengan kartu papan.
+7. `avatarCropper.js` -> `AvatarCropperDialog.jsx`: pertahankan elemen `<dialog>` native (Escape dan focus trap bawaan), geser lewat pointer events dan panah keyboard, serta penggeser zoom berlabel. Hasil JPEG 256x256 dikirim ke endpoint foto profil hasil Step 0.
+8. `services/places.js` -> `src/lib/places.js`: logika murni, dipindah tanpa ubahan bersama `CAMPUS_PLACES` di `constants.js`.
+9. `reportDetail.js` -> `ReportDetailDialog.jsx`: pertahankan elemen `<dialog>` native (Escape dan focus trap bawaan). Judul kartu di `PublicBoard.jsx` dan `MyReportsPage.jsx` adalah tombol pemicu; buka lewat state `selectedReportId` (Zustand), bukan menulis DOM langsung, dan kembalikan fokus ke judul kartu saat dialog tutup. Komponen pelacak progres dan `getPlaceName` dipakai bersama dengan kartu. Persentase meter dukungan dihitung di dialog dari `max(upvotes)` seluruh laporan. Animasi muncul (opacity dan `translateY 14px`, 350ms) tetap di CSS dan mati lewat `prefers-reduced-motion`. Aksi Dukung dan Lihat di Peta di dalam dialog memakai handler yang sama dengan kartu, dan dialog menutup setelahnya.
 
 **DoD Step 5:** alur lengkap berjalan end to end melawan backend asli: buat laporan dengan foto live -> muncul di papan -> upvote -> status berubah oleh admin -> indikator 3 tahap (`Diterima` -> `Diperbaiki` -> `Selesai`) dan riwayat `status_history` tampil.
 
@@ -213,6 +218,10 @@ Lalu: hapus folder `frontend/` lama hanya setelah satu minggu stabil (atau arsip
 | `js/features/adminPanel.js` | `AdminDashboard.jsx` | Tinggi |
 | `js/features/authPage.js` | `AuthForm.jsx`, `GoogleButton.jsx`, `NimInviteModal.jsx` | Tinggi |
 | `js/features/profile.js` | `ProfilePanel.jsx` | Sedang |
+| `js/features/myReports.js` | `MyReportsPage.jsx` | Sedang |
+| `js/features/avatarCropper.js` | `AvatarCropperDialog.jsx` | Sedang |
+| `js/features/reportDetail.js` | `ReportDetailDialog.jsx` | Sedang |
+| `js/services/places.js` | `src/lib/places.js` | Rendah |
 | `js/features/duplicateModal.js` | `DuplicateModal.jsx` | Sedang |
 | `js/features/header.js`, `stepsCarousel.js` | `Header.jsx`, `StepsCarousel.jsx` | Sedang |
 | `css/base.css`, `css/map.css` | basis token Tailwind + CSS kustom peta | Rendah |

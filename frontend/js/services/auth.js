@@ -383,6 +383,45 @@ export function updateSessionName(newName) {
   return updateSessionProfile({ name: newName });
 }
 
+// Foto profil: gambar kecil hasil pangkas (data URL), disimpan per akun.
+// Mode live: unggah ke backend masih menunggu kontrak di Step 6.1.
+function avatarKey(session) {
+  return `reportloop.avatar.${session.role}.${session.id}`;
+}
+
+export function getProfilePhoto(session = getSession()) {
+  if (!session) return null;
+  try {
+    const value = localStorage.getItem(avatarKey(session));
+    return value && /^data:image\/(jpeg|png|webp);base64,/.test(value) ? value : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+export function setProfilePhoto(dataUrl) {
+  const s = getSession();
+  if (!s) throw new Error('Sesi tidak ditemukan.');
+  if (!/^data:image\/(jpeg|png|webp);base64,/.test(String(dataUrl || ''))) {
+    throw new Error('Format foto tidak valid.');
+  }
+  try {
+    localStorage.setItem(avatarKey(s), dataUrl);
+  } catch (_) {
+    throw new Error('Foto gagal disimpan. Penyimpanan browser penuh atau tidak tersedia.');
+  }
+}
+
+export function clearProfilePhoto() {
+  const s = getSession();
+  if (!s) return;
+  try {
+    localStorage.removeItem(avatarKey(s));
+  } catch (_) {
+    /* tidak ada yang perlu dilakukan */
+  }
+}
+
 export function logout() {
   try {
     localStorage.removeItem(SESSION_KEY);

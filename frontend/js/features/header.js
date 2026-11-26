@@ -5,11 +5,10 @@
 import { API_MODE_STYLES, IS_LOCAL_HOST } from '../config/constants.js';
 import { state, resetToDemoData } from '../state/store.js';
 import { fetchReports } from '../services/api.js';
-import { logout, ROLE_LOGIN } from '../services/auth.js';
+import { logout, ROLE_LOGIN, getProfilePhoto } from '../services/auth.js';
 import { showToast } from '../utils/toast.js';
 import { focusMapOn } from './map.js';
 import { renderProfilePanel } from './profile.js';
-import { setScope } from './publicBoard.js';
 
 // Halaman profil dibuka lewat tombol akun di pojok header, bukan dari daftar menu
 const PROFILE_VIEW = 'profil';
@@ -18,6 +17,7 @@ const NAV_ITEMS = {
   user: [
     { view: 'lapor', label: 'Peta & Lapor' },
     { view: 'papan', label: 'Papan Laporan' },
+    { view: 'laporan-saya', label: 'Laporan Saya' },
   ],
   admin: [
     { view: 'antrean', label: 'Antrean Triase' },
@@ -102,6 +102,22 @@ export function renderNav(role) {
   }
 }
 
+// Foto profil bila ada, inisial sebagai cadangan. Foto dekoratif karena nama akun tertulis di dekatnya.
+function paintAvatar(el, initials, photo) {
+  if (photo) {
+    el.textContent = '';
+    const img = document.createElement('img');
+    img.src = photo;
+    img.alt = '';
+    img.width = 96;
+    img.height = 96;
+    img.className = 'w-full h-full object-cover';
+    el.appendChild(img);
+  } else {
+    el.textContent = initials;
+  }
+}
+
 export function renderSession(session) {
   const roleLabel = document.getElementById('role-label');
   const initials = (session.name || 'U')
@@ -114,8 +130,9 @@ export function renderSession(session) {
   document.querySelectorAll('[data-session-name]').forEach((el) => {
     el.textContent = session.name || '-';
   });
+  const photo = getProfilePhoto(session);
   document.querySelectorAll('[data-session-avatar]').forEach((el) => {
-    el.textContent = initials;
+    paintAvatar(el, initials, photo);
   });
   document.querySelectorAll('[data-session-role]').forEach((el) => {
     el.textContent = ROLE_TEXT[session.role] || '';
@@ -245,9 +262,6 @@ export function bindHeaderEvents(renderAll, session) {
     if (!navBtn) return;
     const targetView = navBtn.dataset.navView;
     switchView(session.role, targetView);
-    if (session.role === 'user' && targetView === 'papan') {
-      setScope(navBtn.dataset.boardScope || 'all');
-    }
   });
 
   // Dukungan tombol Back/Forward browser

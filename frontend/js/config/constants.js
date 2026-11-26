@@ -42,6 +42,18 @@ export const CAMPUS_BOUNDARY = [
 // Radius deteksi laporan duplikat (meter)
 export const DUPLICATE_RADIUS_METERS = 15.0;
 
+// Tempat bernama di kampus. Sumber yang sama dengan titik cepat di form laporan.
+export const CAMPUS_PLACES = [
+  { id: 'koridor-lt2', name: 'Koridor Gedung Kuliah Lt. 2', short: 'Koridor Lt. 2', lat: -6.4085, lng: 108.2815 },
+  { id: 'gerbang-utama', name: 'Gerbang Utama dan Parkiran', short: 'Gerbang utama', lat: -6.4091, lng: 108.2822 },
+  { id: 'pagar-depan', name: 'Pagar Depan Kampus', short: 'Pagar depan', lat: -6.4079, lng: 108.2809 },
+  { id: 'lab-baru', name: 'Gedung Bengkel dan Lab Baru', short: 'Gedung lab baru', lat: -6.4098, lng: 108.2834 },
+];
+
+// Titik laporan dianggap berada di sebuah tempat bila jaraknya tidak lebih dari ini (meter)
+export const PLACE_MATCH_RADIUS_METERS = 80;
+export const PLACE_FALLBACK_NAME = 'Area kampus';
+
 // Aturan kata kunci untuk simulasi klasifikasi NLP
 export const NLP_RULES = {
   Infrastructure: ['keran', 'lampu', 'bocor', 'ac', 'proyektor', 'pintu', 'kursi', 'listrik', 'pipa', 'banjir', 'patah', 'mati', 'padam', 'stopkontak', 'atap', 'kamar mandi'],

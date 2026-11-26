@@ -59,28 +59,87 @@
   - [x] Memindahkan atau menghapus file monolitik lama (`reportloop_campus_web_app.html` dan `reportloop_campus_web_app.backup.html`) jika masih ada setelah seluruh halaman modular terverifikasi.
 
 ### Step 5B: Revisi Navigasi, Foto Profil, Kartu Laporan & Halaman Laporan Saya (satu langkah per persetujuan)
-- [ ] **5B.A Menu Header (`html/header.html`, `js/features/header.js`):**
+- [x] **5B.A Menu Header (`html/header.html`, `js/features/header.js`):**
   - [x] Hamburger di HP, tombol avatar di desktop, panel akun (kartu identitas, Profil & Pengaturan Akun, Mode data, Keluar), dan tombol tema di header sudah ada.
-  - [ ] Menu Mahasiswa menjadi *Peta & Lapor*, *Papan Laporan*, *Laporan Saya* (saat ini baru dua item). Panel HP dan dropdown desktop memuat tema, mode data, dan Keluar sesuai gambar 1.
-- [ ] **5B.B Foto Profil (`js/features/profile.js`, `js/features/header.js`, `js/services/auth.js`):**
-  - [ ] Unggah, pangkas, dan pratinjau foto di halaman Profil & Pengaturan (validasi tipe dan ukuran, gambar diperkecil sebelum disimpan).
-  - [ ] Foto tampil di header, panel akun, dan kartu identitas, dengan inisial sebagai cadangan.
-  - [ ] Kontrak backend untuk unggah foto profil dicatat untuk Step 6.1.
-- [ ] **5B.C Kartu Laporan & Nama Tempat (`js/features/publicBoard.js`, `js/features/profile.js`, `js/data/seedReports.js`):**
-  - [ ] Koordinat dihapus dari semua kartu dan diganti nama tempat; tombol *Lihat di Peta* tetap ada (gambar 3).
-  - [ ] Field nama tempat ditambahkan ke data laporan (seed dan laporan baru), diturunkan dari titik cepat kampus terdekat; field baru dicatat untuk kontrak `Report` di Step 6.1.
-- [ ] **5B.D Papan Laporan Umum (`html/view-mahasiswa.html`, `js/features/publicBoard.js`):**
-  - [ ] Tab *Laporan saya* dan *Dukungan saya* dihapus dari papan.
-  - [ ] Kartu ringkasan status yang bisa diklik (Diterima, Diperbaiki, Selesai) sebagai filter, ditambah pencarian, chip kategori, dan grid kartu (gambar 2).
-- [ ] **5B.E Halaman Laporan Saya (`html/view-mahasiswa.html`, `js/features/profile.js`, `js/features/header.js`):**
-  - [ ] Halaman sendiri dengan tiga tab: *Laporan saya*, *Progres saya*, dan *Didukung*; pelacakan dan daftar didukung dipindah dari Profil.
+  - [x] Menu Mahasiswa menjadi *Peta & Lapor*, *Papan Laporan*, *Laporan Saya* (`NAV_ITEMS` di `header.js`; desktop dan panel HP memakai daftar yang sama).
+  - [ ] Verifikasi di browser dan cocokkan dengan gambar 1 (belum dijalankan; gambar belum bisa saya lihat).
+- [x] **5B.B Foto Profil (`js/features/avatarCropper.js`, `js/features/profile.js`, `js/features/header.js`, `js/services/auth.js`):**
+  - [x] Unggah, pangkas (geser, zoom, tombol panah), dan pratinjau foto di halaman Profil & Pengaturan; validasi JPG/PNG/WebP maks. 5 MB; hasil diperkecil ke 256x256 JPEG dan disimpan per akun di `localStorage` (`reportloop.avatar.<peran>.<id>`).
+  - [x] Foto tampil di header, panel akun, dan kartu identitas Profil, dengan inisial sebagai cadangan; tombol *Ganti foto* dan *Hapus foto* tersedia.
+  - [ ] Kontrak backend untuk unggah foto profil di mode live (endpoint dan field) belum ada; dicatat untuk Step 6.1. Saat ini foto hanya tersimpan di browser.
+  - [ ] Verifikasi di browser (belum dijalankan): dialog pangkas (mouse, sentuh, keyboard, Escape), file salah tipe atau lebih dari 5 MB, hapus foto, dua tema, layar 320px.
+- [x] **5B.C Kartu Laporan & Nama Tempat (`js/services/places.js`, `js/config/constants.js`, `js/features/publicBoard.js`, `js/features/profile.js`, `js/features/reportForm.js`):**
+  - [x] Koordinat dihapus dari kartu papan dan diganti nama tempat; daftar di Profil menampilkan nama tempat; tombol *Lihat di Peta* tetap ada. Kartu admin memang tidak menampilkan koordinat.
+  - [x] `place_name` disimpan pada laporan baru; laporan lama dan seed diturunkan dari titik kampus terdekat (radius 80 m, cadangan "Area kampus"). Field `place_name` (opsional) masih harus disepakati di kontrak `Report` Step 6.1.
+  - [ ] Verifikasi di browser (belum dijalankan): kartu papan, Profil, laporan baru, dua tema, layar 320px.
+- [x] **5B.D Papan Laporan Umum (`html/view-mahasiswa.html`, `js/features/publicBoard.js`):**
+  - [x] Tab *Laporan saya* dan *Dukungan saya* dihapus dari papan; select status lama ikut dihapus karena digantikan kartu ringkasan.
+  - [x] Kartu ringkasan status yang bisa diklik (Semua, Diterima, Diperbaiki, Selesai) sebagai filter, ditambah pencarian, chip kategori, dan grid kartu.
+  - [ ] Verifikasi di browser dan cocokkan dengan gambar 2 (belum dijalankan).
+- [x] **5B.E Halaman Laporan Saya (`js/features/myReports.js`, `html/view-mahasiswa.html`, `js/features/profile.js`, `js/main.js`):**
+  - [x] Halaman sendiri dengan tiga tab: *Laporan saya*, *Progres saya*, dan *Didukung*; pelacakan dan daftar didukung dipindah dari Profil, dan tombol Profil kini membuka Laporan Saya.
+  - [ ] Verifikasi di browser (belum dijalankan): tiga tab, keadaan kosong, batal dukungan, panah keyboard, dua tema, layar 320px.
 - [ ] **5B.F Dokumen & Pemeriksaan:**
-  - [ ] Perbarui `DESIGN.md`, `PRD.md`, `STACK.md`, dan `MIGRATION-REACT.md` sesuai A sampai E (`DESIGN.md` masih menyebut menu dua item, tanpa foto profil dan Laporan Saya).
-  - [ ] Jalankan pemeriksaan antislop (Delivery Gate) dan klik-through R-35 di dua tema dan breakpoint seluler.
+  - [x] Perbarui `DESIGN.md`, `PRD.md`, `STACK.md`, dan `MIGRATION-REACT.md` sesuai A sampai E (menu tiga item, panel akun, foto profil, Laporan Saya, nama tempat, kontrak `place_name`).
+  - [x] Pemeriksaan antislop statis pada file baru dan yang diubah: tidak ada em dash di `js/`, `html/`, dan `index.html`. Catatan kecil R-39: kanvas pemangkas di `avatarCropper.js` memakai `role="img"` sekaligus `tabindex="0"`.
+- [ ] Klik-through R-35 di dua tema dan breakpoint seluler (dijalankan di browser oleh Izzz).
+
+### Step 5C: Ringkasan Aktivitas per User & Kartu Laporan Saya (satu langkah per persetujuan)
+- [x] **5C.1 Ringkasan Aktivitas ke Laporan Saya (`js/features/myReports.js`, `html/view-mahasiswa.html`, `js/features/profile.js`):**
+  - [x] Ringkasan dihitung dari laporan milik user saja (laporan saya, diterima, diperbaiki, selesai, dukungan diterima, laporan didukung) dan tampil di atas tab Laporan Saya.
+  - [x] Ringkasan kampus dihapus dari Profil; Profil hanya memuat identitas dan pintasan. Sarpras tetap memakai ringkasan kerja di Antrean Triase (tidak ada yang dipindah).
+- [x] **5C.2 Kartu Laporan Saya Disamakan dengan Kartu Papan (`js/features/publicBoard.js`, `js/features/myReports.js`):**
+  - [x] `renderReportCard` diekspor dan dipakai ulang di Laporan Saya (foto dengan fallback ilustrasi, deskripsi, ID, tanggal, meter dukungan); kode kartu lama di `myReports.js` dihapus.
+  - [x] Tombol Dukung disembunyikan di tab Laporan saya dan Progres saya; pelacakan hanya di Progres saya; tab Didukung tetap memiliki Batalkan dukungan.
+  - [ ] Verifikasi di browser (belum dijalankan): foto dan fallback di tiga tab, batal dukungan memperbarui ringkasan, layar 320px.
+- [ ] **5C.3 Dokumen & Pemeriksaan:** selaraskan `DESIGN.md` (7A), `PRD.md`, dan checklist; ulangi pemeriksaan antislop statis; verifikasi browser oleh Izzz.
+
+### Step 5D: Konsistensi Kartu Laporan & Detail Laporan (satu langkah per persetujuan)
+- [x] **5D.1 Bentuk Kartu Seragam (`js/features/publicBoard.js`, `css/base.css`):**
+  - [x] Blok bawah kartu (jumlah dukungan dan tombol) didorong ke dasar kartu dengan `mt-auto`, sehingga sejajar di semua kartu dalam satu baris walau tinggi judul berbeda. Tinggi foto dan placeholder sama (`h-32`). Pelacak dan meter tidak lagi di kartu (lihat 5D.4).
+  - [ ] Verifikasi di browser (belum dijalankan): kartu dengan dan tanpa blok progres dalam satu baris, dua tema, layar 320px.
+- [x] **5D.2 Kartu Bisa Dibuka untuk Detail (`js/features/reportDetail.js`, `js/features/publicBoard.js`, `js/main.js`, `css/base.css`):**
+  - [x] Judul kartu menjadi tombol asli (`data-action="open-detail"`) dengan area klik seluruh kartu; tombol Dukung dan Lihat di Peta tetap berfungsi di atasnya (`z-10`). Hover dan cincin fokus ada pada kartu.
+  - [x] Dialog `<dialog>` native menampilkan foto, deskripsi lengkap, nama tempat (tanpa koordinat), waktu kirim, ID, jumlah dukungan, progres admin, dan riwayat status. Tutup lewat tombol Tutup, Escape, atau klik di luar panel. Berlaku di Papan Laporan dan tiga tab Laporan Saya.
+  - [ ] Verifikasi di browser (belum dijalankan): klik kartu, Enter pada judul, Escape, Dukung dari dalam dialog, kartu tanpa riwayat status, dua tema, layar 320px.
+- [x] **5D.4 Kartu Ringkas & Animasi Halus (`js/features/publicBoard.js`, `js/features/myReports.js`, `js/features/reportDetail.js`, `css/base.css`):**
+  - [x] Kartu hanya memuat foto, status, kategori, judul, nama tempat, jumlah dukungan, dan tombol Dukung. Deskripsi, ID, tanggal, meter, dan tombol Lihat di Peta pindah ke dialog detail; pelacak 3 tahap di kartu hanya pada tab Progres saya. `renderReportCard(rep, options)` tidak lagi menerima `maxUpvotes`; `supportPercent` dihapus.
+  - [x] Animasi dialog `350ms` (opacity dan `translateY 14px`), latar memudar, foto kartu `scale(1.03)` hanya pada `hover: hover` dan `pointer: fine`; mati lewat `prefers-reduced-motion`. Foto kartu `loading="lazy"` dan `decoding="async"`.
+  - [ ] Verifikasi di browser (belum dijalankan): kartu ringkas di Papan dan tiga tab, animasi dialog dan hover, Dukung dari kartu, layar 320px, dua tema, reduced motion.
+- [x] **5D.3 Dokumen:** `DESIGN.md` (7A), `PRD.md` (FR-05), `STACK.md` (struktur `features/`), dan `MIGRATION-REACT.md` (butir 9 dan tabel pemetaan) diselaraskan dengan 5D.1 dan 5D.2. Pemeriksaan statis: tidak ada em dash di `js/features/`, semua impor `reportDetail.js` dan `main.js` punya ekspor pasangannya.
+
+### Step 5E: Evaluasi Halaman Laporan Saya (rencana, belum dikerjakan; satu langkah per persetujuan)
+Temuan evaluasi (`js/features/myReports.js`, `html/view-mahasiswa.html`), semua dari pembacaan kode, belum diuji di browser:
+- Tab *Laporan saya* dan *Progres saya* memakai data yang sama (`ownReports()`), bedanya hanya blok pelacak, yang kini juga ada di dialog detail.
+- Enam kartu ringkasan terlalu banyak dan tidak bisa diklik; *Dukungan diterima* dan *Laporan didukung* tidak mengarah ke tindakan.
+- Tidak ada pencarian, filter status, atau urutan, padahal Papan punya.
+- `renderAll` memanggil `renderMyReports` walau halaman tersembunyi; tiap render menyaring daftar tiga kali dan membangun ulang semua kartu, dan fokus keyboard hilang setelah Dukung/Batalkan dukungan di tab Didukung.
+- Keadaan kosong tab *Progres saya* sama dengan tab *Laporan saya*.
+
+- [x] **5E.A Gabung Tab & Chip Status (`js/features/myReports.js`, `html/view-mahasiswa.html`):**
+  - [x] Gabung *Laporan saya* dan *Progres saya* menjadi satu tab *Laporan saya* dengan chip status (Semua, Diterima, Diperbaiki, Selesai), pencarian, dan urutan; pelacak cukup di dialog detail. Pemeriksaan statis: semua id `myreports-*` ada di markup dan impor dari `publicBoard.js` punya ekspor pasangannya. Verifikasi browser belum dijalankan.
+  - [x] Tab *Didukung* dipertahankan.
+- [ ] **5E.B Tab Pembaruan (`js/features/myReports.js`):**
+  - [ ] Garis waktu perubahan status pada laporan milik pengguna dari `status_history` nyata (laporan, status baru, waktu), terbaru di atas.
+  - [ ] Keadaan kosong jujur bila belum ada perubahan status; tidak ada riwayat karangan.
+- [ ] **5E.C Kartu Ringkasan Bisa Diklik:**
+  - [ ] Empat kartu (Semua, Diterima, Diperbaiki, Selesai) menjadi filter seperti di Papan, dengan `aria-pressed`.
+  - [ ] Kartu *Dukungan diterima* dan *Laporan didukung* dihapus.
+- [ ] **5E.D Penanda Pembaruan Baru (opsional; `js/features/header.js`, `js/features/myReports.js`):**
+  - [ ] Titik kecil pada menu Laporan Saya bila ada perubahan status yang belum dilihat; penanda terakhir dilihat di `localStorage`.
+  - [ ] Di dokumen ditulis sebagai penanda lokal, bukan notifikasi real-time (notifikasi tetap Final Day di `PRD.md`).
+- [ ] **5E.E Efisiensi Render (`js/main.js`, `js/features/myReports.js`):**
+  - [ ] Render hanya saat halaman Laporan Saya terbuka; daftar disaring sekali per render.
+  - [ ] Fokus keyboard dipertahankan setelah Dukung/Batalkan dukungan.
+- [ ] **5E.F Dokumen & Pemeriksaan:** selaraskan `DESIGN.md` (7A), `PRD.md` (FR-05), `STACK.md`, `MIGRATION-REACT.md`, dan `CHECKLIST.md`; pemeriksaan antislop statis; verifikasi browser (tab, filter, keadaan kosong, dua tema, 320px) oleh Izzz.
+- Ditunda (butuh kontrak backend, Step 6.1): edit atau batalkan laporan sendiri selama berstatus *Diterima*, dan notifikasi push.
 
 ### Step 6: Integrasi & Pengujian End-to-End dengan Backend FastAPI
 - [ ] **6.1 Kunci Kontrak API bersama Backend (Ibrahim Movik):**
   - [ ] Memastikan kesamaan path endpoint (`/api/reports`, `/api/reports/{id}/upvote`, `/api/reports/{id}/status`) dan field JSON `Report`.
+  - [ ] Menyepakati field opsional `place_name` pada `Report` (nama tempat kampus; bila kosong FE menurunkannya dari titik terdekat).
+  - [ ] Menyepakati endpoint foto profil (unggah, ambil, hapus) dan field URL fotonya. Saat ini foto hanya tersimpan di `localStorage` per akun.
+  - [ ] Menambahkan rute yang belum ada di `backend/main.py`: `DELETE /api/reports/{id}/upvote` (sudah dipanggil FE) dan `POST /api/auth/google`.
 - [ ] **6.2 Uji Coba Mode Live API (`http://127.0.0.1:8000`):**
   - [ ] Menguji pembuatan laporan baru dengan foto live asli (`multipart/form-data`).
   - [ ] Menguji penolakan foto lama (`HTTP 400 STALE_PHOTO_REJECTED`) agar tidak bisa dikirim.

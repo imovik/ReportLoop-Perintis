@@ -38,7 +38,7 @@ Mengacu pada aturan **STACK 2026**, aplikasi Semifinal wajib berjalan utuh untuk
 * **FR-02 Peta Interaktif Kampus (Leaflet.js):** Menampilkan area geofencing kampus Politeknik Negeri Indramayu, pin laporan aktif berdasarkan warna status, pin target laporan baru yang dapat diklik/digeser, preset titik cepat kampus, serta tombol lokasi GPS perangkat.
 * **FR-03 Form Pelaporan (Foto Live Wajib) & Pratinjau NLP Real-Time:** Input judul, deskripsi, koordinat otomatis dari peta, unggah foto bukti **live** langsung dari kamera (`capture="environment"`) tanpa opsi pilihan foto lama, serta pratinjau kategori otomatis (*Infrastructure*, *Cleanliness*, *Security*). Foto yang terdeteksi sebagai foto lama (> 24 jam) ditolak sistem sehingga tidak dapat dikirim.
 * **FR-04 Pencegahan Laporan Duplikat (Radius 15 Meter):** Mendeteksi laporan aktif berkategori sama dalam jarak <= 15 meter (Haversine di mode demo / PostGIS `ST_DWithin` di mode live) dan menampilkan modal konfirmasi untuk mengalihkan pengguna ke tombol `+1 Upvote` atau mengirim paksa (`force_submit=true`).
-* **FR-05 Papan Laporan Publik, Profil Laporan Saya, Tracking Progres & Upvote:** Papan Laporan utama menampilkan seluruh laporan umum dengan pencarian kata kunci, filter kategori, filter status, pengurutan (dukungan terbanyak / terbaru), tab *Semua laporan* vs *Laporan saya* vs *Dukungan saya*, serta tombol *Upvote* toggle (1 dukungan per pengguna per laporan, dapat diklik kembali untuk membatalkan dukungan). Setiap kartu laporan di Papan Laporan maupun daftar laporan di Profil menampilkan **Pelacakan Pengerjaan Admin** (*3-step progress tracker*: `Diterima` -> `Diperbaiki` -> `Selesai`) beserta rincian riwayat pembaruan status terakhir (`status_history`: waktu & label `Admin`) yang jujur sesuai data nyata. Khusus pada bagian **Profil**, aksi *Buka Papan Laporan* hanya menampilkan daftar laporan milik pengguna tersebut (bukan laporan umum).
+* **FR-05 Papan Laporan Publik, Profil Laporan Saya, Tracking Progres & Upvote:** Papan Laporan utama menampilkan seluruh laporan umum dengan pencarian kata kunci, filter kategori, kartu ringkasan status yang bisa diklik sebagai filter (*Semua*, *Diterima*, *Diperbaiki*, *Selesai*), pengurutan (dukungan terbanyak / terbaru), serta tombol *Upvote* toggle (1 dukungan per pengguna per laporan, dapat diklik kembali untuk membatalkan dukungan). Setiap kartu laporan di Papan Laporan maupun halaman Laporan Saya menampilkan nama tempat (bukan koordinat) serta **Pelacakan Pengerjaan Admin** (*3-step progress tracker*: `Diterima` -> `Diperbaiki` -> `Selesai`) beserta rincian riwayat pembaruan status terakhir (`status_history`: waktu & label `Admin`) yang jujur sesuai data nyata. Kartu dibuat ringkas dan seragam bentuknya (foto, status, kategori, judul, nama tempat, jumlah dukungan, dan tombol Dukung; pelacak 3 tahap di kartu hanya pada tab *Progres saya*) dan bisa dibuka: klik atau tekan Enter pada judul kartu membuka **dialog detail** berisi foto, deskripsi lengkap, nama tempat, waktu kirim, ID, jumlah dukungan dengan meter, progres admin, riwayat status, dan tombol *Lihat di Peta*, dengan animasi muncul halus yang mati bila pengguna memilih `prefers-reduced-motion` (tanpa koordinat; ditutup lewat Escape, tombol Tutup, atau klik di luar panel). Laporan milik pengguna ada di halaman **Laporan Saya** (menu ketiga Mahasiswa) dengan tiga tab: *Laporan saya*, *Progres saya*, dan *Didukung*. Halaman **Profil** memuat identitas akun, foto profil (unggah dan pangkas, tersimpan di browser pada mode demo), dan ringkasan aktivitas.
 * **FR-06 Panel Triase Admin Sarpras:** Ringkasan KPI riil dari jumlah laporan, antrean laporan terurut berdasarkan dukungan tertinggi, filter divisi & status, tombol aksi perubahan status bertahap, dan tombol *Lihat peta* yang memusatkan peta ke titik laporan.
 * **FR-07 Tema Terang (Soft-White) & Gelap (Light / Dark Mode):** Pengalih tema biru-putih lembut (*soft-white*, tidak terlalu putih agar tidak menyilaukan) dan biru-slate gelap dengan kontras ramah bagi mahasiswa bermata minus maupun petugas Sarpras senior, tersimpan di `localStorage` serta menghormati preferensi sistem.
 
@@ -82,6 +82,8 @@ Dokumen ini menjadi acuan sinkronisasi antara **Frontend** dan **Backend (Ibrahi
 | `PATCH` | `/api/reports/{id}/status` | JSON `{ "status": "In Progress" \| "Resolved" }` | `200 OK` — Objek `Report` dengan status terbaru | Tampilkan toast gagal dan kembalikan tombol ke status semula. |
 
 ### Skema Objek `Report` (JSON)
+
+`place_name` bersifat opsional dan masih menunggu kesepakatan dengan backend. Bila kosong, FE menurunkan nama tempat dari titik kampus terdekat (radius 80 m).
 ```json
 {
   "id": "rep-001",
@@ -91,6 +93,7 @@ Dokumen ini menjadi acuan sinkronisasi antara **Frontend** dan **Backend (Ibrahi
   "photo_verification": "Verified (Fresh camera photo)",
   "latitude": -6.4085,
   "longitude": 108.2815,
+  "place_name": "Koridor Gedung Kuliah Lt. 2",
   "category": "Infrastructure",
   "nlp_confidence": 0.91,
   "status": "In Progress",

@@ -58,7 +58,7 @@ frontend/
 └── js/
     ├── main.js                 # -> App.jsx / main.jsx (Bootstrap halaman & event delegation)
     ├── config/
-    │   ├── constants.js        # -> src/config/constants.js (Koordinat kampus, URL API, aturan NLP)
+    │   ├── constants.js        # -> src/config/constants.js (Koordinat kampus, daftar tempat kampus, URL API, aturan NLP)
     │   └── tailwind.config.js  # -> tailwind.config.js
     ├── data/
     │   └── seedReports.js      # -> src/data/seedReports.js (Data awal Mode Demo)
@@ -66,17 +66,21 @@ frontend/
     │   └── store.js            # -> src/context/ReportContext.jsx / Zustand store
     ├── services/               # Logika murni tanpa akses DOM (100% reusable di React)
     │   ├── api.js              # -> src/services/api.js (Client REST FastAPI + Auth Header)
-    │   ├── auth.js             # -> src/services/auth.js (Sesi 8j/7h, Google OAuth via POST /api/auth/google, reset sandi, & validasi peran)
+    │   ├── auth.js             # -> src/services/auth.js (Sesi 8j/7h, Google OAuth via POST /api/auth/google, reset sandi, foto profil per akun, & validasi peran)
     │   ├── geo.js              # -> src/utils/geo.js (Rumus Haversine radius 15m)
+    â”‚   â”œâ”€â”€ places.js           # -> src/lib/places.js (Nama tempat laporan: place_name, atau titik kampus terdekat radius 80 m)
     │   └── nlp.js              # -> src/utils/nlp.js (Simulasi prediksi kategori TF-IDF/NB)
     ├── features/               # Kontroler UI per modul (setara komponen pintar React)
-    │   ├── header.js           # Navigasi aktif, toggle Light/Dark Mode, toggle Demo/Live API
+    │   ├── header.js           # Navigasi aktif, panel akun (sheet HP / dropdown desktop), foto profil di avatar, toggle Light/Dark Mode, toggle Demo/Live API
     │   ├── map.js              # Inisialisasi Leaflet, GPS Geolocation, & sinkronisasi marker
     │   ├── photo.js            # Upload foto live wajib (tanpa opsi foto lama), validasi tipe/ukuran, & pratinjau kamera
     │   ├── reportForm.js       # Submit laporan (blokir foto lama), deteksi duplikat 15m, upvote, & update status
-    │   ├── publicBoard.js      # Filter kategori/status, pencarian, tab dukungan, tracking progres admin, & kartu laporan
+    │   ├── publicBoard.js      # Kartu ringkasan status sebagai filter, filter kategori, pencarian, tracking progres admin, & kartu laporan ringkas (foto, status, judul, nama tempat, dukungan; judul kartu membuka dialog detail)
     │   ├── adminPanel.js       # Hitung KPI riil & render antrean triase Sarpras
     │   ├── duplicateModal.js   # Kontrol dialog aksesibel (Escape & Tab focus trap)
+    â”‚   â”œâ”€â”€ myReports.js        # Halaman Laporan Saya: tab Laporan saya, Progres saya, Didukung
+    â”‚   â”œâ”€â”€ avatarCropper.js    # Dialog pangkas foto profil (geser, zoom, keyboard) -> JPEG 256x256
+    â”‚   â”œâ”€â”€ reportDetail.js     # Dialog detail laporan (<dialog> native, animasi muncul 350ms): deskripsi lengkap, nama tempat, meter dukungan, progres & riwayat status, aksi Dukung dan Lihat di Peta
     â”‚   â”œâ”€â”€ stepsCarousel.js    # Carousel kartu 3 langkah (geser sentuh, seret mouse, titik indikator)
     │   └── authPage.js         # Validasi form login/register, Google OAuth, modal lupa sandi, & Ingat Saya
     └── utils/
@@ -98,6 +102,12 @@ frontend/
 ### 4.2 Kesiapan Token Autentikasi & Endpoint
 * `js/services/api.js` menyediakan pembungkus `buildAuthHeaders()` yang otomatis menyertakan `Authorization: Bearer <token>` apabila sesi memiliki token JWT dari backend. Token sesi Google didapat dari `POST /api/auth/google` (kontrak lengkap di `BACKEND-GOOGLE-AUTH.md`).
 * Seluruh panggilan jaringan menangani status HTTP standar FastAPI: `200 OK`, `201 Created`, `400 Bad Request` (`STALE_PHOTO_REJECTED`), dan `409 Conflict` (`DUPLICATE_NEARBY_REPORT`).
+
+---
+
+### 4.3 Foto Profil & Nama Tempat
+* **Foto profil:** Disimpan per akun di `localStorage` (`reportloop.avatar.<peran>.<id>`) sebagai data URL JPEG 256x256 hasil pangkas, terpisah dari sesi agar sesi tidak membengkak. Ini hanya berlaku di mode demo. Unggah ke server menunggu kontrak backend (Step 6.1 `CHECKLIST.md`). Di React, `getProfilePhoto` dan `setProfilePhoto` menjadi hook `useProfilePhoto()`.
+* **Nama tempat:** `services/places.js` memberi nama tempat dengan urutan `place_name` dari server, lalu titik kampus terdekat dari `CAMPUS_PLACES` (radius `PLACE_MATCH_RADIUS_METERS` = 80 m), lalu "Area kampus". Laporan baru menyimpan `place_name`. Field ini opsional di kontrak `Report` dan masih perlu disepakati dengan backend.
 
 ---
 

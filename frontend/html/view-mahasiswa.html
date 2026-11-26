@@ -107,32 +107,21 @@
 
   <!-- HALAMAN 2: PAPAN LAPORAN KAMPUS -->
   <div id="page-papan" data-page="papan" class="hidden card overflow-hidden">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-ink-200 dark:border-ink-800 px-3 sm:px-5 pt-1 sm:pt-0 pb-2.5 sm:pb-0">
-      <div class="flex w-full sm:w-auto overflow-x-auto no-scrollbar border-b sm:border-b-0 border-ink-200 dark:border-ink-800 -mx-3 px-3 sm:mx-0 sm:px-0" role="tablist" aria-label="Daftar laporan">
-        <button id="tab-semua" type="button" role="tab" aria-selected="true" aria-controls="public-reports-grid" data-scope="all" class="tab">Semua laporan</button>
-        <button id="tab-laporan-saya" type="button" role="tab" aria-selected="false" aria-controls="public-reports-grid" data-scope="user" class="tab">Laporan saya</button>
-        <button id="tab-saya" type="button" role="tab" aria-selected="false" aria-controls="public-reports-grid" data-scope="mine" class="tab">Dukungan saya</button>
-      </div>
-      <button type="button" data-nav-view="lapor" class="btn btn-sm btn-primary w-full sm:w-auto sm:my-2">Buat Laporan Baru</button>
-    </div>
-
     <div class="p-4 sm:p-6">
-      <h1 class="text-xl sm:text-2xl font-extrabold text-ink-900 dark:text-white">Papan laporan kampus</h1>
-      <p id="board-summary" class="text-sm text-ink-600 dark:text-ink-300" aria-live="polite"></p>
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+        <div>
+          <h1 class="text-xl sm:text-2xl font-extrabold text-ink-900 dark:text-white">Papan laporan kampus</h1>
+          <p id="board-summary" class="text-sm text-ink-600 dark:text-ink-300" aria-live="polite"></p>
+        </div>
+        <button type="button" data-nav-view="lapor" class="btn btn-sm btn-primary w-full sm:w-auto sm:shrink-0">Buat Laporan Baru</button>
+      </div>
+
+      <div id="status-summary" class="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3" role="group" aria-label="Ringkasan status laporan"></div>
 
       <div class="mt-4 flex flex-col sm:flex-row gap-3">
         <div class="flex-1">
           <label for="search-reports" class="label">Cari laporan</label>
           <input id="search-reports" type="search" class="field" placeholder="Cari judul atau deskripsi" autocomplete="off" />
-        </div>
-        <div class="sm:w-44">
-          <label for="filter-status" class="label">Status</label>
-          <select id="filter-status" class="field">
-            <option value="ALL">Semua status</option>
-            <option value="Received">Diterima</option>
-            <option value="In Progress">Diperbaiki</option>
-            <option value="Resolved">Selesai</option>
-          </select>
         </div>
         <div class="sm:w-48">
           <label for="sort-reports" class="label">Urutkan</label>
@@ -151,6 +140,39 @@
       </div>
 
       <div id="public-reports-grid" role="tabpanel" class="mt-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+    </div>
+  </div>
+
+  <!-- HALAMAN: LAPORAN SAYA (tab: Laporan saya, Progres saya, Didukung) -->
+  <div id="page-laporan-saya" data-page="laporan-saya" class="hidden card overflow-hidden">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-ink-200 dark:border-ink-800 px-3 sm:px-5 pt-1 sm:pt-0 pb-2.5 sm:pb-0">
+      <div id="myreports-tabs" class="flex w-full sm:w-auto overflow-x-auto no-scrollbar border-b sm:border-b-0 border-ink-200 dark:border-ink-800 -mx-3 px-3 sm:mx-0 sm:px-0" role="tablist" aria-label="Laporan saya"></div>
+      <button type="button" data-nav-view="lapor" class="btn btn-sm btn-primary w-full sm:w-auto sm:my-2">Buat Laporan Baru</button>
+    </div>
+
+    <div class="p-4 sm:p-6">
+      <h1 class="text-xl sm:text-2xl font-extrabold text-ink-900 dark:text-white">Laporan saya</h1>
+      <p class="hint">Laporan yang Anda kirim, progres pengerjaannya, dan laporan yang Anda dukung.</p>
+      <dl id="myreports-summary" class="mt-4 grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3" aria-label="Ringkasan aktivitas saya"></dl>
+
+      <div id="myreports-toolbar" class="mt-4">
+        <div class="flex flex-col sm:flex-row gap-3">
+          <div class="flex-1">
+            <label for="myreports-search" class="label">Cari laporan</label>
+            <input id="myreports-search" type="search" class="field" placeholder="Cari judul atau deskripsi" autocomplete="off" />
+          </div>
+          <div class="sm:w-48">
+            <label for="myreports-sort" class="label">Urutkan</label>
+            <select id="myreports-sort" class="field">
+              <option value="newest">Terbaru</option>
+              <option value="upvotes">Dukungan terbanyak</option>
+            </select>
+          </div>
+        </div>
+        <div id="myreports-status-chips" class="mt-3 flex flex-wrap gap-2" role="group" aria-label="Filter status"></div>
+      </div>
+
+      <div id="myreports-panel" role="tabpanel" class="mt-5"></div>
     </div>
   </div>
 

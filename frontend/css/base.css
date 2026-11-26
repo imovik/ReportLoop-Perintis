@@ -215,6 +215,21 @@ html.dark .nav-link[aria-current='page'] {
   border-radius: 0.875rem;
 }
 
+/* Kartu laporan yang bisa dibuka: area klik dari tombol judul */
+article.card:has([data-action='open-detail']) {
+  transition: border-color 0.15s ease;
+}
+article.card:has([data-action='open-detail']):hover {
+  border-color: var(--line-strong);
+}
+article.card:has([data-action='open-detail']:focus-visible) {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+[data-action='open-detail']:focus-visible {
+  outline: none;
+}
+
 .btn {
   display: inline-flex;
   flex-wrap: wrap;
@@ -516,6 +531,31 @@ html.dark .badge-cat { background: #1e293b; color: #e2e8f0; }
 }
 .safe-top {
   padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Dialog detail laporan: muncul halus (350ms, geser 14px), sama dengan scroll reveal */
+#report-detail-dialog[open] {
+  animation: dialogIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+#report-detail-dialog[open]::backdrop {
+  animation: fadeIn 0.35s ease-out both;
+}
+@keyframes dialogIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Kartu laporan: transisi halus untuk hover dan foto */
+article.card:has([data-action='open-detail']) img {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (hover: hover) and (pointer: fine) {
+  article.card:has([data-action='open-detail']):hover img {
+    transform: scale(1.03);
+  }
+}
+article.card:has([data-action='open-detail']) {
+  overflow: hidden;
 }
 
 .fade-in {

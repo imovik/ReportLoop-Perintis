@@ -4,6 +4,8 @@ import { initCampusMap, renderMapMarkers, bindMapEvents } from './features/map.j
 import { bindPhotoEvents } from './features/photo.js';
 import { bindDuplicateModalEvents } from './features/duplicateModal.js';
 import { renderPublicBoard, bindBoardEvents } from './features/publicBoard.js';
+import { renderMyReports, bindMyReportsEvents } from './features/myReports.js';
+import { openReportDetail } from './features/reportDetail.js';
 import { renderAdminTable, bindAdminEvents } from './features/adminPanel.js';
 import { bindHeaderEvents, focusReportOnMap, renderSession } from './features/header.js';
 import { renderProfilePanel } from './features/profile.js';
@@ -46,7 +48,10 @@ async function loadPartials() {
 
 export function renderAll() {
   if (!state.isLiveApi) saveDemoState();
-  if (role === 'user') renderPublicBoard();
+  if (role === 'user') {
+    renderPublicBoard();
+    renderMyReports();
+  }
   if (role === 'admin') renderAdminTable();
   renderProfilePanel(renderSession);
   renderMapMarkers();
@@ -64,6 +69,8 @@ function bindDelegatedActions() {
       updateReportStatus(id, status, renderAll);
     } else if (action === 'focus-map') {
       focusReportOnMap(parseFloat(lat), parseFloat(lng), role);
+    } else if (action === 'open-detail') {
+      openReportDetail(id, { showUpvote: el.dataset.showUpvote !== 'false' });
     }
   });
 }
@@ -94,7 +101,10 @@ async function boot() {
   bindMapEvents();
   bindPhotoEvents();
   bindFormEvents(renderAll);
-  if (role === 'user') bindBoardEvents();
+  if (role === 'user') {
+    bindBoardEvents();
+    bindMyReportsEvents();
+  }
   if (role === 'admin') bindAdminEvents();
   bindDuplicateModalEvents();
   bindDelegatedActions();
