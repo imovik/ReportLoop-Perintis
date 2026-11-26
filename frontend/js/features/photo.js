@@ -1,4 +1,4 @@
-// Fitur foto bukti: unggah kamera/galeri, validasi MIME & ukuran maks 5 MB, dan cek umur foto (< 24 jam).
+// Fitur foto bukti: unggah kamera langsung atau pilih file terbaru (maks 24 jam), validasi MIME & ukuran maks 5 MB.
 
 import { state } from '../state/store.js';
 import { showToast } from '../utils/toast.js';
@@ -13,14 +13,27 @@ function syncSubmitButtonState() {
   submitBtn.disabled = Boolean(state.isStalePhoto);
 }
 
+function resetPhotoInputs(exceptInput = null) {
+  const cameraInput = document.getElementById('input-photo-camera');
+  const fileInput = document.getElementById('input-photo');
+  if (cameraInput && cameraInput !== exceptInput) cameraInput.value = '';
+  if (fileInput && fileInput !== exceptInput) fileInput.value = '';
+}
+
 export function handlePhotoChange(event) {
-  const file = event.target.files[0];
+  const targetInput = event.target;
+  const file = targetInput?.files?.[0];
   if (!file) return;
 
+  resetPhotoInputs(targetInput);
+
   if (!ALLOWED_MIME_TYPES.includes(file.type)) {
-    event.target.value = '';
+    targetInput.value = '';
+    state.currentPhotoDataUrl = null;
     state.currentPhotoFile = null;
     state.isStalePhoto = false;
+    const wrapper = document.getElementById('photo-preview-wrapper');
+    if (wrapper) wrapper.classList.add('hidden');
     hideStaleAlert();
     syncSubmitButtonState();
     showToast('Format foto harus JPG, PNG, atau WebP.', 'error');
@@ -28,9 +41,12 @@ export function handlePhotoChange(event) {
   }
 
   if (file.size > MAX_FILE_SIZE_BYTES) {
-    event.target.value = '';
+    targetInput.value = '';
+    state.currentPhotoDataUrl = null;
     state.currentPhotoFile = null;
     state.isStalePhoto = false;
+    const wrapper = document.getElementById('photo-preview-wrapper');
+    if (wrapper) wrapper.classList.add('hidden');
     hideStaleAlert();
     syncSubmitButtonState();
     const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
@@ -45,12 +61,17 @@ export function handlePhotoChange(event) {
   const reader = new FileReader();
   reader.onload = function (e) {
     state.currentPhotoDataUrl = e.target.result;
-    document.getElementById('photo-preview-img').src = state.currentPhotoDataUrl;
+    const previewImg = document.getElementById('photo-preview-img');
+    const filenameEl = document.getElementById('photo-filename');
+    const wrapper = document.getElementById('photo-preview-wrapper');
+    if (previewImg) previewImg.src = state.currentPhotoDataUrl;
     const kb = Math.round(file.size / 1024);
-    document.getElementById('photo-filename').textContent = `${file.name} (${kb} KB)`;
-    document.getElementById('photo-preview-wrapper').classList.remove('hidden');
+    if (filenameEl) filenameEl.textContent = `${file.name} (${kb} KB)`;
+    if (wrapper) wrapper.classList.remove('hidden');
   };
   reader.onerror = function () {
+    targetInput.value = '';
+    state.currentPhotoDataUrl = null;
     state.currentPhotoFile = null;
     state.isStalePhoto = false;
     syncSubmitButtonState();
@@ -61,7 +82,7 @@ export function handlePhotoChange(event) {
   if (isStale) {
     showStaleAlert();
     syncSubmitButtonState();
-    showToast('Foto lama (lebih dari 24 jam) ditolak. Ambil foto terbaru di lokasi.', 'error');
+    showToast('Foto lama (lebih dari 24 jam) ditolak. Ambil atau pilih foto terbaru (maks. 24 jam).', 'error');
   } else {
     hideStaleAlert();
     syncSubmitButtonState();
@@ -74,9 +95,12 @@ export function clearPhoto() {
   state.isStalePhoto = false;
   hideStaleAlert();
   syncSubmitButtonState();
-  const input = document.getElementById('input-photo');
+  resetPhotoInputs();
+  const previewImg = document.getElementById('photo-preview-img');
+  const filenameEl = document.getElementById('photo-filename');
   const wrapper = document.getElementById('photo-preview-wrapper');
-  if (input) input.value = '';
+  if (previewImg) previewImg.src = '';
+  if (filenameEl) filenameEl.textContent = '';
   if (wrapper) wrapper.classList.add('hidden');
 }
 
@@ -91,9 +115,21 @@ export function hideStaleAlert() {
 }
 
 export function bindPhotoEvents() {
-  const input = document.getElementById('input-photo');
-  if (!input) return;
-  input.addEventListener('change', handlePhotoChange);
-  document.getElementById('btn-clear-photo').addEventListener('click', clearPhoto);
-  document.getElementById('btn-hide-stale').addEventListener('click', hideStaleAlert);
+  const cameraInput = document.getElementById('input-photo-camera');
+  const fileInput = document.getElementById('input-photo');
+  const captureBtn = document.getElementById('btn-capture-photo');
+  const pickBtn = document.getElementById('btn-pick-photo');
+  const clearBtn = document.getElementById('btn-clear-photo');
+  const hideStaleBtn = document.getElementById('btn-hide-stale');
+
+  if (cameraInput) cameraInput.addEventListener('change', handlePhotoChange);
+  if (fileInput) fileInput.addEventListener('change', handlePhotoChange);
+  if (captureBtn && cameraInput) {
+    captureBtn.addEventListener('click', () => cameraInput.click());
+  }
+  if (pickBtn && fileInput) {
+    pickBtn.addEventListener('click', () => fileInput.click());
+  }
+  if (clearBtn) clearBtn.addEventListener('click', clearPhoto);
+  if (hideStaleBtn) hideStaleBtn.addEventListener('click', hideStaleAlert);
 }

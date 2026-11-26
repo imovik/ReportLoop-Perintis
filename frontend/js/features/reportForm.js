@@ -76,7 +76,7 @@ export function finalizeCreateReport(payload, renderAll) {
     title: payload.title,
     description: payload.description,
     photo_url: payload.photoUrl,
-    photo_verification: 'Foto kamera baru',
+    photo_verification: 'Foto bukti baru',
     latitude: payload.latitude,
     longitude: payload.longitude,
     place_name: getPlaceName({ latitude: payload.latitude, longitude: payload.longitude }),
@@ -177,14 +177,14 @@ export async function handleReportSubmit(event, renderAll) {
     return;
   }
   if (!state.currentPhotoFile) {
-    showToast('Ambil dan lampirkan foto bukti langsung di lokasi.', 'error');
+    showToast('Ambil foto atau pilih file foto bukti terbaru terlebih dahulu.', 'error');
     return;
   }
 
   // Lapis 1: validasi umur foto
   if (state.isStalePhoto) {
     showStaleAlert();
-    showToast('Foto lama (lebih dari 24 jam) ditolak. Ambil foto terbaru di lokasi.', 'error');
+    showToast('Foto lama (lebih dari 24 jam) ditolak. Ambil atau pilih foto terbaru (maks. 24 jam).', 'error');
     return;
   }
 
@@ -218,7 +218,7 @@ export async function handleReportSubmit(event, renderAll) {
         if (submitBtn) submitBtn.disabled = true;
         showStaleAlert();
         const detailMsg = typeof data.detail === 'string' ? data.detail : data.detail?.message;
-        showToast(detailMsg || 'Foto lama (lebih dari 24 jam) ditolak. Ambil foto terbaru di lokasi.', 'error');
+        showToast(detailMsg || 'Foto lama (lebih dari 24 jam) ditolak. Ambil atau pilih foto terbaru (maks. 24 jam).', 'error');
         return;
       }
       if (res.status === 409) {

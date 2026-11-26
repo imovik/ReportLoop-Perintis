@@ -143,7 +143,7 @@ Urutan konversi dari termudah ke tersulit:
 1. `publicBoard.js` -> `PublicBoard.jsx`: grid kartu, kartu ringkasan status yang menjadi filter, filter kategori, pencarian, sortir, dan nama tempat pada kartu lewat `getPlaceName`. Kartu dibuat ringkas (foto, status, kategori, judul, nama tempat, dukungan, tombol Dukung), jadi `ReportCard` cukup menerima `report` dan opsi `showUpvote` serta `showTracking`, tanpa `maxUpvotes`; meter dukungan dan deskripsi hanya dirender di `ReportDetailDialog.jsx`. Papan tidak lagi punya tab cakupan; laporan milik sendiri dan dukungan pindah ke halaman Laporan Saya. State dari Zustand, event handler inline ala React.
 2. `reportForm.js` + `photo.js` -> `ReportForm.jsx`:
    - Validasi foto (tipe `image/jpeg|png|webp`, maks 5 MB) dipindah apa adanya.
-   - Aturan foto live wajib dan blokir `isStalePhoto` tetap aktif, diselaraskan dengan penolakan backend `400 STALE_PHOTO_REJECTED`.
+   - Dua opsi input foto (ambil foto kamera langsung dan pilih file foto) serta blokir `isStalePhoto` (> 24 jam) tetap aktif, diselaraskan dengan penolakan backend `400 STALE_PHOTO_REJECTED`.
    - Pratinjau NLP memanggil `predictNlpCategory()` yang sudah dipindah di Step 2.
 3. `map.js` -> `CampusMap.jsx` (komponen tersulit):
    - Leaflet diinisialisasi di `useEffect` dengan cleanup (`map.remove()`), instance disimpan di ref Zustand non-reactive, bukan state React biasa (recreate map tiap render = bocor memori).

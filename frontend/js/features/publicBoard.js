@@ -50,13 +50,13 @@ export function renderLoading() {
   const grid = document.getElementById('public-reports-grid');
   if (!grid) return;
   grid.setAttribute('aria-busy', 'true');
-  grid.innerHTML = [1, 2]
+  grid.innerHTML = [1, 2, 3, 4]
     .map(
       () => `
-      <div class="card p-4 space-y-3" aria-hidden="true">
+      <div class="card p-3 sm:p-4 space-y-2.5" aria-hidden="true">
         <div class="skeleton h-5 w-2/3"></div>
         <div class="skeleton h-4 w-1/2"></div>
-        <div class="skeleton h-16 w-full"></div>
+        <div class="skeleton h-14 w-full"></div>
       </div>`
     )
     .join('');
@@ -213,34 +213,34 @@ export function renderReportCard(rep, { showUpvote = true, showTracking = false 
     <article class="card overflow-hidden flex flex-col relative">
       ${
         resolvedPhotoSrc
-          ? `<img src="${escapeHtml(resolvedPhotoSrc)}" alt="Foto laporan: ${escapeHtml(rep.title)}" width="640" height="360" class="w-full h-32 object-cover" loading="lazy" decoding="async" />`
+          ? `<img src="${escapeHtml(resolvedPhotoSrc)}" alt="Foto laporan: ${escapeHtml(rep.title)}" width="640" height="360" class="w-full h-24 sm:h-32 object-cover" loading="lazy" decoding="async" />`
           : getPhotoPlaceholderSvg(rep.category)
       }
 
-      <div class="p-4 flex-1 flex flex-col gap-3">
-        <div class="flex flex-wrap items-center gap-2">
+      <div class="p-3 sm:p-4 flex-1 flex flex-col gap-2 sm:gap-3">
+        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
           <span class="${getStatusBadgeClass(rep.status)}">${statusText}</span>
           <span class="${getCategoryBadgeClass(rep.category)}">${catText}</span>
         </div>
 
         <div>
-          <h3 class="text-base font-bold text-ink-900 dark:text-white leading-snug">
+          <h3 class="text-sm sm:text-base font-bold text-ink-900 dark:text-white leading-snug">
             <button type="button" data-action="open-detail" data-id="${escapeHtml(rep.id)}" data-show-upvote="${showUpvote}" aria-label="Lihat detail laporan ${escapeHtml(rep.title)}" class="text-left hover:underline after:absolute after:inset-0 after:content-['']">${escapeHtml(rep.title)}</button>
           </h3>
         </div>
 
-        <p class="flex items-center gap-1.5 text-sm font-semibold text-ink-900 dark:text-white">
-          <svg class="w-4 h-4 shrink-0 text-brand-700 dark:text-brand-400" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+        <p class="flex items-start gap-1.5 text-xs sm:text-sm font-semibold text-ink-900 dark:text-white">
+          <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 mt-0.5 text-brand-700 dark:text-brand-400" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
           </svg>
           <span class="min-w-0">${escapeHtml(getPlaceName(rep))}</span>
         </p>
 
-        <div class="mt-auto flex flex-col gap-3 relative z-10">
+        <div class="mt-auto flex flex-col gap-2 sm:gap-3 relative z-10">
         ${showTracking ? renderAdminTracking(rep) : ''}
 
-        <p class="border-t border-ink-200 dark:border-ink-800 pt-3 text-sm font-semibold text-ink-900 dark:text-white">${rep.upvotes} dukungan</p>
+        <p class="border-t border-ink-200 dark:border-ink-800 pt-2 sm:pt-3 text-xs sm:text-sm font-semibold text-ink-900 dark:text-white">${rep.upvotes} dukungan</p>
 
         ${showUpvote ? `<button
           type="button"
@@ -248,8 +248,8 @@ export function renderReportCard(rep, { showUpvote = true, showTracking = false 
           data-id="${escapeHtml(rep.id)}"
           aria-pressed="${isUpvoted}"
           aria-label="${isUpvoted ? 'Batalkan dukungan' : 'Dukung'} laporan ${escapeHtml(rep.title)}, ${rep.upvotes} dukungan"
-          class="btn w-full ${isUpvoted ? 'btn-primary' : 'btn-ghost'}"
-        >${isUpvoted ? 'Batalkan dukungan' : 'Dukung laporan ini'}</button>` : ''}
+          class="btn btn-sm sm:min-h-[44px] w-full px-2.5 sm:px-4 text-xs sm:text-sm ${isUpvoted ? 'btn-primary' : 'btn-ghost'}"
+        >${isUpvoted ? 'Batalkan dukungan' : 'Dukung laporan'}</button>` : ''}
         </div>
       </div>
     </article>

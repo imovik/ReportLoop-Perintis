@@ -31,9 +31,9 @@ export function getStatusPinColor(status) {
 export function getPhotoPlaceholderSvg(category) {
   const label = CATEGORY_LABEL[category] || 'Laporan';
   return `
-    <div class="w-full h-32 flex flex-col items-center justify-center px-4 text-center bg-ink-100 dark:bg-ink-800/80 text-ink-700 dark:text-ink-300 border-b border-ink-200 dark:border-ink-800">
-      <span class="text-sm font-bold">${label}</span>
-      <span class="text-xs mt-0.5">Belum ada foto</span>
+    <div class="w-full h-24 sm:h-32 flex flex-col items-center justify-center px-3 sm:px-4 text-center bg-ink-100 dark:bg-ink-800/80 text-ink-700 dark:text-ink-300 border-b border-ink-200 dark:border-ink-800">
+      <span class="text-xs sm:text-sm font-bold">${label}</span>
+      <span class="text-[11px] sm:text-xs mt-0.5">Belum ada foto</span>
     </div>
   `;
 }

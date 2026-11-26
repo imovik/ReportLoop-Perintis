@@ -229,7 +229,7 @@ function renderMyReportsContent() {
       : Date.parse(b.created_at) - Date.parse(a.created_at)
   );
   const options = CARD_OPTIONS[activeTab];
-  panel.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">${sorted
+  panel.innerHTML = `<div class="grid grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">${sorted
     .map((rep) => renderReportCard(rep, options))
     .join('')}</div>`;
 }

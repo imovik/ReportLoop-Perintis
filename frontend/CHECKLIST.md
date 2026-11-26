@@ -36,9 +36,9 @@
   - [x] Menghapus seluruh tautan langsung ke `admin-masuk.html` / `admin-daftar.html` / `admin.html` dari `index.html`, `header.html`, dan halaman Mahasiswa agar akses Sarpras terisolasi (siap dipisah ke subdomain khusus di produksi).
   - [x] Memastikan `admin-masuk.html` dan `admin-daftar.html` berdiri sebagai UI terpisah dengan tombol pengalih tema (Terang/Gelap) dan proteksi guard peran pada `js/services/auth.js`.
 
-### Step 3: Perbaikan Alur Foto Live & Pemblokiran Foto Lama (`photo.js`, `reportForm.js`, `view-mahasiswa.html`)
-- [x] **3.1 Hapus Opsi Foto Lama di Form Buat Laporan Baru:**
-  - [x] Menghilangkan pilihan/radio/tombol simulasi foto lama dari antarmuka `html/view-mahasiswa.html` sehingga form hanya menerima unggahan foto **live** (`capture="environment"`).
+### Step 3: Perbaikan Alur Foto Bukti (Dua Opsi) & Pemblokiran Foto Lama (`photo.js`, `reportForm.js`, `view-mahasiswa.html`)
+- [x] **3.1 Dua Opsi Input Foto Bukti pada Form Buat Laporan Baru:**
+  - [x] Menyediakan dua tombol pada `html/view-mahasiswa.html` dan `js/features/photo.js`: **Ambil foto** (`#btn-capture-photo` -> `#input-photo-camera` dengan `capture="environment"`) dan **Pilih file foto** (`#btn-pick-photo` -> `#input-photo`), tetap mewajibkan usia foto maksimal 24 jam.
   - [x] Memastikan pada `js/features/photo.js` dan `js/features/reportForm.js`, apabila file foto terdeteksi sebagai foto lama (> 24 jam / `isStalePhoto`), tombol kirim diblokir dan laporan **tidak bisa dikirim**.
 - [x] **3.2 Validasi File Foto Bukti (`js/features/photo.js`):**
   - [x] Menambahkan validasi tipe file gambar (`image/jpeg`, `image/png`, `image/webp`) dan batas ukuran maksimal `5 MB` dengan pesan umpan balik jelas.

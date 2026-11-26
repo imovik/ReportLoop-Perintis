@@ -73,7 +73,7 @@ frontend/
     ├── features/               # Kontroler UI per modul (setara komponen pintar React)
     │   ├── header.js           # Navigasi aktif, panel akun (sheet HP / dropdown desktop), foto profil di avatar, toggle Light/Dark Mode, toggle Demo/Live API
     │   ├── map.js              # Inisialisasi Leaflet, GPS Geolocation, & sinkronisasi marker
-    │   ├── photo.js            # Upload foto live wajib (tanpa opsi foto lama), validasi tipe/ukuran, & pratinjau kamera
+    │   ├── photo.js            # Dua opsi unggah foto bukti (ambil foto kamera & pilih file foto), validasi tipe/ukuran maks 5 MB, & cek umur foto (<= 24 jam)
     │   ├── reportForm.js       # Submit laporan (blokir foto lama), deteksi duplikat 15m, upvote, & update status
     │   ├── publicBoard.js      # Kartu ringkasan status sebagai filter, filter kategori, pencarian, tracking progres admin, & kartu laporan ringkas (foto, status, judul, nama tempat, dukungan; judul kartu membuka dialog detail)
     │   ├── adminPanel.js       # Hitung KPI riil & render antrean triase Sarpras

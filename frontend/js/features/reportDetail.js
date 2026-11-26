@@ -78,7 +78,6 @@ export function openReportDetail(id, { showUpvote = true } = {}) {
           </div>
           <h2 id="report-detail-title" class="mt-2 text-lg font-extrabold leading-snug">${escapeHtml(rep.title)}</h2>
         </div>
-        <button type="button" id="report-detail-close" aria-label="Tutup detail laporan" class="btn btn-sm btn-ghost shrink-0">Tutup</button>
       </div>
 
       <p class="text-sm text-ink-700 dark:text-ink-200 leading-relaxed whitespace-pre-line">${escapeHtml(rep.description)}</p>
@@ -117,7 +116,6 @@ export function openReportDetail(id, { showUpvote = true } = {}) {
     dialog.remove();
     if (restoreFocus && returnFocusEl && returnFocusEl.isConnected) returnFocusEl.focus();
   };
-  dialog.querySelector('#report-detail-close').addEventListener('click', () => close());
   dialog.querySelector('#report-detail-back').addEventListener('click', () => close());
   // Klik di luar panel (pada backdrop) menutup dialog
   dialog.addEventListener('click', (e) => {
