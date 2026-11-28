@@ -21,6 +21,14 @@ function getInitials(name) {
   return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
 }
 
+function getGreeting(date = new Date()) {
+  const h = date.getHours();
+  if (h >= 4 && h < 11) return 'Selamat pagi';
+  if (h >= 11 && h < 15) return 'Selamat siang';
+  if (h >= 15 && h < 18) return 'Selamat sore';
+  return 'Selamat malam';
+}
+
 export function AppHeader({ session, onNavigateSection, isLiveApi = false, onToggleApiMode }) {
   const [panelOpen, setPanelOpen] = useState(false);
   const location = useLocation();
@@ -34,6 +42,26 @@ export function AppHeader({ session, onNavigateSection, isLiveApi = false, onTog
   const homePath = ROLE_HOME[role] || '/user';
   const photoUrl = getProfilePhoto(activeSession);
   const initials = getInitials(activeSession?.name || (role === 'admin' ? 'Admin' : 'Mahasiswa'));
+  const displayName = String(activeSession?.name || '').trim();
+  const [showGreeting, setShowGreeting] = useState(false);
+  const [greeting, setGreeting] = useState(() => getGreeting());
+
+  useEffect(() => {
+    if (!displayName) {
+      setShowGreeting(false);
+      return undefined;
+    }
+    const reduceMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return undefined;
+    const id = setInterval(() => {
+      setGreeting(getGreeting());
+      setShowGreeting((prev) => !prev);
+    }, 5000);
+    return () => clearInterval(id);
+  }, [displayName]);
 
   useEffect(() => {
     if (!panelOpen) return;
@@ -121,8 +149,25 @@ export function AppHeader({ session, onNavigateSection, isLiveApi = false, onTog
             </span>
             <div className="min-w-0">
               <p className="text-base sm:text-lg font-extrabold tracking-tight leading-none">ReportLoop</p>
-              <p id="role-label" className="mt-0.5 sm:mt-1 text-[11px] sm:text-xs text-blue-100 truncate">
-                {role === 'admin' ? 'Admin Sarpras â€¢ Politeknik Negeri Indramayu' : 'Mahasiswa â€¢ Politeknik Negeri Indramayu'}
+              <p id="role-label" className="mt-0.5 sm:mt-1 text-[11px] sm:text-xs text-blue-100 grid overflow-hidden">
+                <span
+                  aria-hidden={showGreeting && displayName ? 'true' : undefined}
+                  className={`col-start-1 row-start-1 block truncate transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+                    showGreeting && displayName ? 'opacity-0 -translate-y-2' : 'opacity-100 translate-y-0'
+                  }`}
+                >
+                  Politeknik Negeri Indramayu
+                </span>
+                {displayName && (
+                  <span
+                    aria-hidden={showGreeting ? undefined : 'true'}
+                    className={`col-start-1 row-start-1 block truncate transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+                      showGreeting ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+                    }`}
+                  >
+                    {`Halo, ${displayName}. ${greeting}`}
+                  </span>
+                )}
               </p>
             </div>
           </Link>

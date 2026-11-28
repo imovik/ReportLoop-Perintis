@@ -86,6 +86,7 @@ export function LandingPage() {
   const isUser = session?.role === 'user';
   const workspaceHref = isAdmin ? '/admin#antrean' : isUser ? '/user#lapor' : '/masuk';
   const navCtaLabel = isAdmin ? 'Buka Panel Admin' : isUser ? 'Buka Beranda Mahasiswa' : 'Masuk Mahasiswa';
+  const navCtaShort = isAdmin ? 'Panel' : isUser ? 'Beranda' : 'Masuk';
   const heroCtaLabel = isAdmin ? 'Buka Panel Admin' : isUser ? 'Buka Beranda Mahasiswa' : 'Buat Laporan Mahasiswa';
 
   useEffect(() => () => window.clearTimeout(throwTimerRef.current), []);
@@ -215,17 +216,17 @@ export function LandingPage() {
   return (
     <div ref={containerRef} className="min-h-screen flex flex-col">
       <header className="sticky top-0 z-30 border-b border-ink-200 dark:border-ink-800 bg-ink-50/95 dark:bg-ink-950/95 safe-top">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-          <Link to="/" className="flex items-center gap-2.5 rounded-lg">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2 sm:gap-4">
+          <Link to="/" className="flex items-center gap-2 sm:gap-2.5 rounded-lg min-w-0 shrink">
             <span className="w-9 h-9 rounded-lg bg-brand-700 dark:bg-brand-600 text-white flex items-center justify-center shrink-0">
               <svg className="w-5 h-5" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
               </svg>
             </span>
-            <div>
-              <span className="text-lg font-extrabold tracking-tight text-ink-900 dark:text-white block leading-none">ReportLoop</span>
-              <span className="text-[11px] font-medium text-ink-600 dark:text-ink-300 block mt-0.5">Politeknik Negeri Indramayu</span>
+            <div className="min-w-0">
+              <span className="text-base sm:text-lg font-extrabold tracking-tight text-ink-900 dark:text-white block leading-none whitespace-nowrap">ReportLoop</span>
+              <span className="text-[10px] sm:text-[11px] font-medium text-ink-600 dark:text-ink-300 block mt-0.5 truncate">Politeknik Negeri Indramayu</span>
             </div>
           </Link>
 
@@ -250,10 +251,11 @@ export function LandingPage() {
             </a>
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <ThemeToggle variant="ghost" />
-            <Link to={workspaceHref} className="btn btn-primary min-h-[44px]">
-              {navCtaLabel}
+            <Link to={workspaceHref} aria-label={navCtaLabel} className="btn btn-primary min-h-[44px] whitespace-nowrap px-4 text-sm">
+              <span className="sm:hidden">{navCtaShort}</span>
+              <span className="hidden sm:inline">{navCtaLabel}</span>
             </Link>
           </div>
         </div>
@@ -296,25 +298,26 @@ export function LandingPage() {
               <div className="lg:col-span-6 relative">
                 <div className="rounded-2xl bg-brand-700 dark:bg-brand-900/70 p-4 sm:p-6 border border-brand-800 dark:border-brand-700">
                   <div className="card p-4 sm:p-5 space-y-4">
-                    <div className="flex items-center justify-between gap-2 pb-3 border-b border-ink-200 dark:border-ink-800">
-                      <div>
+                    <div className="flex items-start justify-between gap-3 pb-3 border-b border-ink-200 dark:border-ink-800">
+                      <div className="min-w-0">
                         <p className="text-xs font-semibold text-ink-600 dark:text-ink-300">Pratinjau Triase Kampus Polindra</p>
-                        <p className="font-mono text-xs text-brand-700 dark:text-brand-400 mt-0.5">
-                          -6.40850, 108.28150 &bull; Radius Duplikat 15 m
+                        <p className="font-mono text-xs text-brand-700 dark:text-brand-400 mt-0.5 flex flex-wrap gap-x-2">
+                          <span className="whitespace-nowrap">-6.40850, 108.28150</span>
+                          <span className="whitespace-nowrap">Radius Duplikat 15 m</span>
                         </p>
                       </div>
-                      <span className="badge badge-progress">Diperbaiki</span>
+                      <span className="badge badge-progress shrink-0 whitespace-nowrap">Diperbaiki</span>
                     </div>
 
                     <div className="rounded-lg bg-brand-50 dark:bg-brand-950/80 border border-brand-200 dark:border-brand-800 p-3.5">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <span className="badge badge-cat">Infrastruktur</span>
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div className="min-w-0 flex-1 basis-40">
+                          <span className="badge badge-cat whitespace-nowrap">Infrastruktur</span>
                           <h2 className="mt-2 text-base font-bold text-ink-900 dark:text-white">Lampu lorong lantai 2 padam</h2>
                           <p className="mt-1 text-xs text-ink-600 dark:text-ink-300">Prediksi divisi otomatis oleh NLP</p>
                         </div>
                         <div className="text-right shrink-0">
-                          <span className="inline-flex items-center gap-1 rounded-lg bg-ink-50 dark:bg-ink-900 border border-ink-200 dark:border-ink-700 px-2.5 py-1.5 text-xs font-bold text-brand-700 dark:text-brand-400">
+                          <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-lg bg-ink-50 dark:bg-ink-900 border border-ink-200 dark:border-ink-700 px-2.5 py-1.5 text-xs font-bold text-brand-700 dark:text-brand-400">
                             Dukungan warga
                           </span>
                         </div>
@@ -328,7 +331,7 @@ export function LandingPage() {
                       </div>
                       <div className="rounded-lg border border-ink-200 dark:border-ink-800 p-2.5 bg-ink-50 dark:bg-ink-900/60">
                         <span className="block text-lg font-extrabold text-brand-700 dark:text-brand-400 font-mono">{counts.progress}</span>
-                        <span className="text-xs text-ink-600 dark:text-ink-300">Diperbaiki</span>
+                        <span className="text-[11px] sm:text-xs text-ink-600 dark:text-ink-300 whitespace-nowrap">Diperbaiki</span>
                       </div>
                       <div className="rounded-lg border border-ink-200 dark:border-ink-800 p-2.5 bg-ink-50 dark:bg-ink-900/60">
                         <span className="block text-lg font-extrabold text-green-700 dark:text-green-400 font-mono">{counts.resolved}</span>

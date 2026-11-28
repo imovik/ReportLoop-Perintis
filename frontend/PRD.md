@@ -1,9 +1,9 @@
 # Product Requirements Document (PRD) - Frontend ReportLoop
 
-**Versi:** 1.1 (React + Vite SPA - Fase Semifinal STACK 2026 - GDGoC ITB)  
-**Pemilik Modul:** M. Fadil Faiz (UI/UX Designer & Frontend Developer)  
-**Tim:** Tim Perintis - D4 Teknologi Rekayasa Komputer, Politeknik Negeri Indramayu  
-**Target Lingkungan:** Web App Responsif (*Mobile-First* & *Desktop*)  
+**Versi:** 1.1 (React + Vite SPA - Fase Semifinal STACK 2026 - GDGoC ITB)
+**Pemilik Modul:** M. Fadil Faiz (UI/UX Designer & Frontend Developer)
+**Tim:** Tim Perintis - D4 Teknologi Rekayasa Komputer, Politeknik Negeri Indramayu
+**Target Lingkungan:** Web App Responsif (*Mobile-First* & *Desktop*)
 
 ---
 

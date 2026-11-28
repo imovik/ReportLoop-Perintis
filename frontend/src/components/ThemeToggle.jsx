@@ -94,8 +94,8 @@ export function ThemeToggle({ variant = 'header', className = '' }) {
 
   const buttonStyle =
     variant === 'ghost'
-      ? 'btn btn-ghost px-3 min-h-[44px] cursor-pointer'
-      : 'nav-link border border-white/35 px-2.5 min-h-[44px] cursor-pointer';
+      ? 'btn btn-ghost !px-0 w-11 h-11 min-h-[44px] shrink-0 inline-flex items-center justify-center cursor-pointer'
+      : 'nav-link border border-white/35 !px-0 w-11 h-11 min-h-[44px] shrink-0 inline-flex items-center justify-center cursor-pointer';
 
   return (
     <button
@@ -115,7 +115,7 @@ export function ThemeToggle({ variant = 'header', className = '' }) {
           <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
         </svg>
       )}
-      <span data-theme-label className="hidden xl:inline">
+      <span data-theme-label className="sr-only">
         {isDark ? 'Terang' : 'Gelap'}
       </span>
     </button>
