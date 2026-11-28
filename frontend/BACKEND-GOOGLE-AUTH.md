@@ -1,16 +1,16 @@
 # Panduan Backend: Google Auth untuk ReportLoop (FastAPI)
 
-Dokumen ini untuk pengembang backend. Frontend sudah selesai dan hanya mengirim **token ID Google** ke satu endpoint. Backend wajib memverifikasi token itu sendiri. Frontend tidak boleh dipercaya untuk menentukan identitas atau peran.
+Dokumen ini untuk pengembang backend. Frontend React (`frontend-react/`) sudah selesai dan hanya mengirim **token ID Google** ke satu endpoint. Backend wajib memverifikasi token itu sendiri. Frontend tidak boleh dipercaya untuk menentukan identitas atau peran.
 
 ---
 
 ## 1. Alur singkat
 
-1. Pengguna menekan tombol Google (Google Identity Services, SDK resmi).
+1. Pengguna menekan tombol Google (Google Identity Services, SDK resmi, dikelola di `src/services/auth.js`).
 2. Google mengembalikan `credential` (JWT token ID) ke browser.
 3. Frontend mengirim `POST /api/auth/google` ke backend.
 4. Backend memverifikasi token ke Google, mencari atau membuat akun, lalu mengembalikan `token` sesi milik backend.
-5. Frontend menyimpan `token` dan mengirimnya sebagai `Authorization: Bearer <token>` di setiap request berikutnya.
+5. Frontend menyimpan `token` dan mengirimnya sebagai `Authorization: Bearer <token>` (`buildAuthHeaders()` di `src/services/api.js`) di setiap request berikutnya.
 
 ---
 
@@ -70,8 +70,9 @@ Contoh body error:
 1. Buka Google Cloud Console, buat atau pilih project.
 2. Menu **APIs & Services > OAuth consent screen**: isi nama aplikasi, email dukungan, lalu simpan.
 3. Menu **Credentials > Create credentials > OAuth client ID**, tipe **Web application**.
-4. Pada **Authorized JavaScript origins**, tambahkan alamat frontend:
-   - lokal: `http://localhost:5500`
+4. Pada **Authorized JavaScript origins**, tambahkan alamat frontend React:
+   - lokal (Vite dev server): `http://localhost:5173`
+   - preview build lokal: `http://localhost:4173`
    - production: `https://domain-frontend-anda`
 5. Salin **Client ID** (`xxxx.apps.googleusercontent.com`). Backend dan frontend memakai Client ID yang **sama**.
 6. Client Secret tidak diperlukan untuk alur token ID ini.
@@ -86,13 +87,13 @@ Instal dependensi:
 pip install fastapi uvicorn google-auth requests pyjwt python-dotenv
 ```
 
-`.env` (jangan di-commit, tambahkan ke `.gitignore`):
+`.env` backend (jangan di-commit, tambahkan ke `.gitignore`):
 
 ```env
 GOOGLE_CLIENT_ID=xxxx.apps.googleusercontent.com
 JWT_SECRET=isi-dengan-string-acak-panjang
 ADMIN_INVITE_CODE=isi-kode-rahasia-dari-unit-sarpras
-CORS_ORIGINS=http://localhost:5500
+CORS_ORIGINS=http://localhost:5173,http://localhost:4173
 ```
 
 Kerangka endpoint:
@@ -179,33 +180,40 @@ app.add_middleware(
 ## 5. Aturan keamanan yang wajib dipenuhi backend
 
 - **Selalu verifikasi** token ID ke Google (audience harus sama dengan Client ID). Jangan percaya `email` atau `name` dari frontend.
-- **Peran ditentukan oleh backend** dari token sesi. Penjaga peran di frontend (`requireRole`) hanya soal tampilan dan bisa dilewati. Endpoint `PATCH /api/reports/{id}/status` wajib menolak token non-admin dengan `403`.
+- **Peran ditentukan oleh backend** dari token sesi. Penjaga peran di frontend (`Layout.jsx` / `requireRole`) hanya soal tampilan dan bisa dilewati. Endpoint `PATCH /api/reports/{id}/status` wajib menolak token non-admin dengan `403`.
 - Kode undangan admin disimpan di environment server, **tidak** di kode frontend atau repo.
 - Verifikasi `email_verified` bernilai true.
 - Untuk membatasi ke email kampus, cek domain (`info.get("hd")` atau akhiran email) sebelum membuat akun.
-- Gunakan HTTPS di production. Token sesi disimpan frontend di `localStorage`, jadi jaga agar tidak ada celah XSS (frontend sudah memakai `escapeHtml`).
+- Gunakan HTTPS di production. Token sesi disimpan frontend di `localStorage`, jadi jaga agar tidak ada celah XSS.
 - Batasi laju percobaan login di sisi server.
 
 ---
 
-## 6. Menghubungkan frontend ke backend
+## 6. Menghubungkan frontend React ke backend
 
-Frontend membaca dua nilai dari `localStorage` (sumber: `js/config/constants.js`):
+Frontend React membaca variabel environment Vite di `frontend-react/.env` (sumber: `src/config/constants.js`):
+
+```env
+VITE_API_BASE_URL=[http://127.0.0.1:8000](http://127.0.0.1:8000)
+VITE_GOOGLE_CLIENT_ID=xxxx.apps.googleusercontent.com
+```
+
+Untuk kebutuhan debug cepat di browser tanpa mengubah `.env` atau build ulang, `src/config/constants.js` juga mendukung cadangan `localStorage`:
 
 ```js
-localStorage.setItem('reportloop.apiBase', 'http://127.0.0.1:8000');
+localStorage.setItem('reportloop.apiBase', '[http://127.0.0.1:8000](http://127.0.0.1:8000)');
 localStorage.setItem('reportloop.googleClientId', 'xxxx.apps.googleusercontent.com');
 ```
 
-Muat ulang halaman. Tombol Google resmi akan muncul menggantikan tombol bawaan. Untuk production atau migrasi React, atur lewat environment variable atau nilai default di `constants.js` (lihat `MIGRATION-REACT.md` Step 1) agar tidak bergantung pada console browser.
+Muat ulang halaman. Tombol Google resmi akan muncul menggantikan tombol bawaan.
 
 ---
 
 ## 7. Daftar uji
 
-- [ ] Masuk Google mahasiswa baru: backend membalas `NIM_REQUIRED`, modal NIM muncul, lalu berhasil dan masuk ke `user.html`.
-- [ ] Masuk Google mahasiswa yang sudah terdaftar: langsung masuk.
+- [ ] Masuk Google mahasiswa baru: backend membalas `NIM_REQUIRED`, modal NIM muncul, lalu berhasil dan masuk ke `/user`.
+- [ ] Masuk Google mahasiswa yang sudah terdaftar: langsung masuk ke `/user`.
 - [ ] Admin baru tanpa kode: `INVITE_REQUIRED`. Kode salah: pesan error tampil.
 - [ ] Token palsu atau kedaluwarsa: `401`, pesan tampil.
 - [ ] Token mahasiswa dipakai memanggil `PATCH /api/reports/{id}/status`: `403`.
-- [ ] CORS tidak memblokir request dari origin frontend.
+- [ ] CORS tidak memblokir request dari origin frontend (`http://localhost:5173`).

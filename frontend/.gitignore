@@ -1,20 +1,10 @@
-# Sistem Operasi (Windows & macOS)
-Thumbs.db
-Desktop.ini
-.DS_Store
-
-# Editor & IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Lingkungan & Konfigurasi Lokal
+node_modules/
+dist/
+.vite/
 .env
 .env.local
 .env.*.local
 
-# Log & File Sementara
-*.log
-*.tmp
-*.bak
+# Abaikan semua file dokumentasi .md kecuali README.md
+*.md
+!README.md
