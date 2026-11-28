@@ -197,7 +197,7 @@ localStorage.setItem('reportloop.apiBase', 'http://127.0.0.1:8000');
 localStorage.setItem('reportloop.googleClientId', 'xxxx.apps.googleusercontent.com');
 ```
 
-Muat ulang halaman. Tombol Google resmi akan muncul menggantikan tombol bawaan. Untuk production, ganti nilai default di `constants.js` (lihat `MIGRASI-PRODUCTION.md`) agar tidak bergantung pada console browser.
+Muat ulang halaman. Tombol Google resmi akan muncul menggantikan tombol bawaan. Untuk production atau migrasi React, atur lewat environment variable atau nilai default di `constants.js` (lihat `MIGRATION-REACT.md` Step 1) agar tidak bergantung pada console browser.
 
 ---
 

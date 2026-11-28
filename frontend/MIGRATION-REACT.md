@@ -1,15 +1,17 @@
 # Rencana Migrasi React: ReportLoop Perintis
 
-Dokumen ini adalah panduan kerja langkah demi langkah untuk memindahkan frontend dari Vanilla HTML/CSS/ES Modules ke React + Vite, dengan prioritas utama: integrasi mulus dengan backend FastAPI + PostGIS milik tim backend.
+Dokumen ini adalah panduan kerja langkah demi langkah untuk memindahkan frontend dari Vanilla HTML/CSS/ES Modules ke **React + Vite**, dengan dua aturan utama:
+1. **Pindah Stack 1:1 (Tanpa Pengubahan Fitur):** Seluruh fitur, alur pengguna, tampilan Soft-White/Dark Mode, aksesibilitas, dan perilaku yang sudah berjalan di versi Vanilla dipindahkan secara utuh tanpa menambah atau menghapus fitur.
+2. **Siap Integrasi Backend FastAPI:** Lapisan konfigurasi (`VITE_API_BASE_URL`, `VITE_GOOGLE_CLIENT_ID`), layanan REST (`src/services/api.js`), autentikasi (`src/services/auth.js`), dan normalisasi skema data disiapkan sejak awal build React agar begitu migrasi selesai, aplikasi langsung siap dihubungkan ke `backend/main.py`.
 
 **Target waktu (dari CHECKLIST.md):** Semifinal STACK 2026, 30 November 2026. Final Day, 16 Desember 2026.
 
 **Prinsip migrasi:**
 
-1. Lapisan yang sudah bersih (services, utils, config, data, state) dipindah dulu, hampir tanpa ubah.
-2. Lapisan DOM (features, main.js) dikonversi jadi komponen, bukan disalin.
-3. Mode demo dihapus secara bertahap; backend menjadi satu-satunya sumber kebenaran.
-4. Tiap step punya Definition of Done (DoD) yang bisa diverifikasi lewat build, klik, atau uji API.
+1. **Zero Feature Drift:** Tidak ada penambahan fitur baru (fitur Final Day tetap disisakan) dan tidak ada fitur lama yang dibuang (Mode Demo fallback, auth email/NIM + Google OAuth, avatar cropper, pelacak progres, dialog detail, dan isolasi portal Sarpras tetap dipertahankan 1:1).
+2. **Pindah Lapisan Bersih Dulu:** Modul yang bebas DOM (`services`, `utils`, `config`, `data`, `state`) dipindahkan ke `src/` terlebih dahulu sebelum konversi komponen UI.
+3. **Konversi Deklaratif:** Lapisan DOM imperatif (`html/*.html`, `js/features/*.js`, `js/main.js`) dikonversi menjadi komponen `.jsx` + *custom hooks* dengan tampilan dan interaksi yang identik.
+4. **Kesiapan Integrasi BE di Lapisan Service:** Perbedaan nama field antara `backend/main.py` dan state UI dinormalisasi di `src/services/api.js` (bukan di komponen UI) agar integrasi BE langsung jalan setelah build React selesai.
 
 **Hasil audit kesiapan:** struktur FE sekitar 75% siap. Lapisan integrasi BE (`services/api.js`, kontrak OAuth di `services/auth.js`, `data/seedReports.js`) sudah rapi dan hampir tinggal dipindah. Bagian yang menentukan kecepatan adalah konversi 12 file di `js/features/` yang imperatif dan penuh `document.getElementById`.
 
@@ -25,8 +27,8 @@ Migrasi tanpa kontrak yang dikunci akan memaksa refactor dua kali. Selesaikan in
 |---|---|---|---|
 | GET | `/api/reports` | Daftar laporan | FE toleran response array polos atau `{reports: []}` |
 | POST | `/api/reports` | Buat laporan | `multipart/form-data`, field foto: `photo`, plus `force_submit` |
-| POST | `/api/reports/{id}/upvote` | Upvote | | 
-| DELETE | `/api/reports/{id}/upvote` | Batalkan upvote | | 
+| POST | `/api/reports/{id}/upvote` | Upvote | |
+| DELETE | `/api/reports/{id}/upvote` | Batalkan upvote | |
 | PATCH | `/api/reports/{id}/status` | Ubah status admin | Body `{status}`, tolak non-admin dengan 403 |
 | POST | `/api/auth/google` | Masuk/daftar Google | Body `{credential, role, nim, invite_code}`, error 422 `NIM_REQUIRED` / `INVITE_REQUIRED` |
 
@@ -156,7 +158,7 @@ Urutan konversi dari termudah ke tersulit:
 8. `services/places.js` -> `src/lib/places.js`: logika murni, dipindah tanpa ubahan bersama `CAMPUS_PLACES` di `constants.js`.
 9. `reportDetail.js` -> `ReportDetailDialog.jsx`: pertahankan elemen `<dialog>` native (Escape dan focus trap bawaan). Judul kartu di `PublicBoard.jsx` dan `MyReportsPage.jsx` adalah tombol pemicu; buka lewat state `selectedReportId` (Zustand), bukan menulis DOM langsung, dan kembalikan fokus ke judul kartu saat dialog tutup. Komponen pelacak progres dan `getPlaceName` dipakai bersama dengan kartu. Persentase meter dukungan dihitung di dialog dari `max(upvotes)` seluruh laporan. Animasi muncul (opacity dan `translateY 14px`, 350ms) tetap di CSS dan mati lewat `prefers-reduced-motion`. Aksi Dukung dan Lihat di Peta di dalam dialog memakai handler yang sama dengan kartu, dan dialog menutup setelahnya.
 
-**DoD Step 5:** alur lengkap berjalan end to end melawan backend asli: buat laporan dengan foto live -> muncul di papan -> upvote -> status berubah oleh admin -> indikator 3 tahap (`Diterima` -> `Diperbaiki` -> `Selesai`) dan riwayat `status_history` tampil.
+**DoD Step 5:** alur lengkap berjalan end to end melawan backend asli: buat laporan dengan foto bukti terbaru -> muncul di papan -> upvote -> status berubah oleh admin -> indikator 3 tahap (`Diterima` -> `Diperbaiki` -> `Selesai`) dan riwayat `status_history` tampil.
 
 ---
 
@@ -185,7 +187,7 @@ Urutan konversi dari termudah ke tersulit:
 
 Jalankan daftar uji dari CHECKLIST.md Step 6.2 melawan `http://127.0.0.1:8000`:
 
-- [ ] Buat laporan dengan foto live asli (multipart).
+- [ ] Buat laporan dengan foto bukti terbaru (kamera langsung atau file <= 24 jam, multipart).
 - [ ] Kirim foto lama, pastikan ditolak `400 STALE_PHOTO_REJECTED`.
 - [ ] Kirim laporan dalam radius 15 m dari laporan aktif, pastikan `409 DUPLICATE_NEARBY_REPORT` dan modal muncul.
 - [ ] Upvote dan batalkan upvote.

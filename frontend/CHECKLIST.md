@@ -8,7 +8,7 @@
 ## Bagian 0: Sudah Selesai Direvisi
 
 - [x] **Email Google, Google OAuth, Lupa Kata Sandi & Ingat Saya (7 Hari):** Menambahkan field email Google umum pada registrasi & profil mahasiswa, tombol *Masuk/Daftar dengan Google* (memakai Google Identity Services SDK resmi; token ID diverifikasi backend, tanpa akun dummy), dialog pemulihan kata sandi, serta checkbox *Ingat saya di perangkat ini* (memperpanjang sesi dari 8 jam menjadi 7 hari) pada `masuk.html`, `daftar.html`, `admin-masuk.html`, `admin-daftar.html`, `authPage.js`, `auth.js`, dan `profile.js`.
-- [x] **Dokumen Spesifikasi & Desain:** Menyusun dan memperbarui `PRD.md`, `DESIGN.md`, dan `STACK.md` sesuai alur Semifinal vs. Final Day serta feedback terbaru (isolasi portal Sarpras, foto live wajib, profil khusus laporan user, palet *soft-white*, dan prinsip teks ringkas Clean UI).
+- [x] **Dokumen Spesifikasi & Desain:** Menyusun dan memperbarui `PRD.md`, `DESIGN.md`, `STACK.md`, dan `MIGRATION-REACT.md` sesuai alur Semifinal vs. Final Day serta feedback terbaru (isolasi portal Sarpras, foto bukti terbaru maks. 24 jam, profil khusus laporan user, palet *soft-white*, dan prinsip teks ringkas Clean UI).
 - [x] **Token Warna Light & Dark Mode:** Menambahkan variabel warna dasar pada `css/base.css` serta penyesuaian peta gelap pada `css/map.css`.
 - [x] **Pengelola Tema & Konfigurasi Tailwind:** Membuat `js/utils/theme.js` (Heroicons Matahari/Bulan + `localStorage`) dan `js/config/tailwind.config.js` (`darkMode: 'class'`).
 - [x] **Efek Gulir Halus (*Scroll Reveal*):** Membuat `js/utils/scrollReveal.js` berbasis `IntersectionObserver` dengan dukungan `prefers-reduced-motion`.
@@ -131,40 +131,37 @@ Temuan evaluasi (`js/features/myReports.js`, `html/view-mahasiswa.html`), semua 
 - [x] **5E.E Efisiensi Render (`js/main.js`, `js/features/myReports.js`, `js/features/header.js`):**
   - [x] Render hanya saat halaman Laporan Saya terbuka (dilewati bila `#page-laporan-saya` tersembunyi, dan dirender ulang saat `switchView` membuka halaman itu); daftar disaring sekali per render. Pemeriksaan statis: `node --check` lolos pada `myReports.js` dan `header.js`. Verifikasi browser belum dijalankan.
   - [x] Fokus keyboard dipertahankan setelah Dukung/Batalkan dukungan (tombol dicari ulang berdasarkan `data-action` dan `data-id`; bila kartu hilang, fokus pindah ke panel).
-- [x] **5E.F Dokumen & Pemeriksaan (sebagian):**
+- [x] **5E.F Dokumen & Pemeriksaan:**
   - [x] `DESIGN.md` (Laporan Saya, kartu, dialog detail), `PRD.md` (FR-05), `STACK.md` (`myReports.js`), `MIGRATION-REACT.md` (butir 6), dan komentar di `view-mahasiswa.html` diselaraskan dengan 5E.A sampai 5E.E (tab Laporan saya, Pembaruan, Didukung; pelacak hanya di dialog detail).
   - [x] Pemeriksaan antislop statis: tidak ada em dash di `js/`, `html/`, dan `index.html`; tidak ada `indigo-`, `purple-`, `violet-`, atau `#6366f1` di kode.
-  - [ ] Verifikasi browser (tab, filter, keadaan kosong, dua tema, 320px) oleh Izzz. Belum dijalankan.
-  - [ ] Nama token di `DESIGN.md` bagian 2 (`--bg-subtle`, `--text-primary`, `--text-secondary`) belum disamakan dengan `base.css` (`--brand-soft`, `--ink`, `--ink-soft`).
-  - [ ] Pemeriksaan emoji pada teks antarmuka belum dilakukan.
+  - [x] Nama token di `DESIGN.md` bagian 2 (`--page`, `--surface`, `--surface-muted`, `--brand-soft`, `--brand-line`, `--ink`, `--ink-soft`, `--brand-dark`, `--line`) dan `STACK.md` disamakan dengan `css/base.css`.
+  - [x] Pemeriksaan emoji pada seluruh file `.html`, `.js`, dan `.css` di `frontend/` selesai (`TOTAL_EMOJI_HITS=0`).
+  - [ ] Verifikasi browser (tab, filter, keadaan kosong, dua tema, 320px) oleh Faiz. Belum dijalankan.
 - Ditunda (butuh kontrak backend, Step 6.1): edit atau batalkan laporan sendiri selama berstatus *Diterima*, dan notifikasi push.
 
 ### Step 6: Integrasi & Pengujian End-to-End dengan Backend FastAPI
-- [ ] **6.1 Kunci Kontrak API bersama Backend (Ibrahim Movik):**
-  - [ ] Memastikan kesamaan path endpoint (`/api/reports`, `/api/reports/{id}/upvote`, `/api/reports/{id}/status`) dan field JSON `Report`.
-  - [ ] Menyepakati field opsional `place_name` pada `Report` (nama tempat kampus; bila kosong FE menurunkannya dari titik terdekat).
-  - [ ] Menyepakati endpoint foto profil (unggah, ambil, hapus) dan field URL fotonya. Saat ini foto hanya tersimpan di `localStorage` per akun.
-  - [ ] Menambahkan rute yang belum ada di `backend/main.py`: `DELETE /api/reports/{id}/upvote` (sudah dipanggil FE) dan `POST /api/auth/google`.
+- [ ] **6.1 Keselarasan Kontrak API & Normalisasi Data (`backend/main.py`):**
+  - [x] Rute inti sudah tersedia di `backend/main.py`: `GET /api/reports`, `POST /api/reports`, `POST /api/reports/{id}/upvote`, `DELETE /api/reports/{id}/upvote`, `PATCH /api/reports/{id}/status` (dilindungi `require_admin` -> `403 FORBIDDEN`), dan `POST /api/auth/google` (`422 NIM_REQUIRED` / `INVITE_REQUIRED`).
+  - [ ] Menyiapkan helper `normalizeReport()` pada lapisan `api.js` (terutama saat migrasi ke React) untuk memetakan `reporter_id` -> `user_id`, menggabungkan prefix `FASTAPI_BASE_URL` pada `photo_url` relatif (`/uploads/...`), serta mengisi fallback `place_name` (via `getPlaceName()`) dan `status_history` (`[]`) bila kosong.
+  - [ ] Menyepakati endpoint tambahan opsional di tahap lanjutan (`place_name` di tabel `reports` dan unggah foto profil ke server; saat ini tetap memakai fallback lokal 1:1).
 - [ ] **6.2 Uji Coba Mode Live API (`http://127.0.0.1:8000`):**
-  - [ ] Menguji pembuatan laporan baru dengan foto live asli (`multipart/form-data`).
+  - [ ] Menguji pembuatan laporan baru dengan foto bukti terbaru (`multipart/form-data`, kamera langsung atau file <= 24 jam).
   - [ ] Menguji penolakan foto lama (`HTTP 400 STALE_PHOTO_REJECTED`) agar tidak bisa dikirim.
   - [ ] Menguji deteksi laporan duplikat radius 15 meter (`HTTP 409 DUPLICATE_NEARBY_REPORT`).
-  - [ ] Menguji fitur `+1 Upvote` dan pembaruan status Admin (`Received` -> `In Progress` -> `Resolved`).
-- [ ] **6.3 Persiapan Backend Google OAuth (detail lengkap di `BACKEND-GOOGLE-AUTH.md`):**
-  - [ ] Membuat OAuth Client ID (Web application) di Google Cloud Console dan mendaftarkan origin frontend; Client ID yang sama dipakai FE dan BE.
-  - [ ] Mengimplementasikan `POST /api/auth/google`: verifikasi token ID ke Google, cek `email_verified`, cari atau buat akun, lalu kembalikan `{ id, email, name, token }`.
-  - [ ] Mengembalikan kode error `NIM_REQUIRED` / `INVITE_REQUIRED` (status `422`) untuk akun baru agar modal lengkapi verifikasi di FE muncul.
-  - [ ] Menyimpan `ADMIN_INVITE_CODE` dan `JWT_SECRET` di `.env` server, serta mengaktifkan CORS untuk origin frontend.
-  - [ ] Memastikan `PATCH /api/reports/{id}/status` menolak token non-admin dengan `403`.
-  - [ ] Mengisi `reportloop.apiBase` dan `reportloop.googleClientId` (atau nilai default di `constants.js` untuk production), lalu menjalankan daftar uji di bagian 7 `BACKEND-GOOGLE-AUTH.md`.
+  - [ ] Menguji fitur `+1 Upvote`, batalkan upvote (`DELETE`), dan pembaruan status Admin (`Received` -> `In Progress` -> `Resolved`).
+- [ ] **6.3 Konfigurasi Environment Google OAuth & CORS (detail lengkap di `BACKEND-GOOGLE-AUTH.md`):**
+  - [ ] Membuat OAuth Client ID (Web application) di Google Cloud Console dan mendaftarkan origin frontend (`http://localhost:5500` untuk Vanilla dan `http://localhost:5173` untuk React Vite); Client ID yang sama dipakai FE dan BE.
+  - [ ] Mengisi `GOOGLE_CLIENT_ID`, `ADMIN_INVITE_CODE`, `JWT_SECRET`, dan `CORS_ORIGINS` di `.env` server FastAPI.
+  - [ ] Mengisi `VITE_API_BASE_URL` dan `VITE_GOOGLE_CLIENT_ID` (atau `localStorage` `reportloop.apiBase` / `reportloop.googleClientId`), lalu menjalankan daftar uji di bagian 7 `BACKEND-GOOGLE-AUTH.md`.
 
-### Step 7: Aset Proposal Semifinal, Migrasi React & Fitur Final Day
+### Step 7: Aset Proposal Semifinal, Migrasi React 1:1 & Fitur Final Day (Detail lengkap di `MIGRATION-REACT.md`)
 - [ ] **7.1 Dokumentasi & Aset Proposal Semifinal (Target: Sebelum 30 November 2026):**
   - [ ] Mengambil tangkapan layar UI resolusi tinggi (tampilan Mobile & Desktop, Mode Terang Soft-White & Mode Gelap) untuk bab *Proposed Solution*.
   - [ ] Memastikan tidak ada fitur *Final Day* yang diklaim sudah selesai di proposal maupun video demo 2 menit.
-- [ ] **7.2 Migrasi 1:1 ke React + Vite + Leaflet:**
-  - [ ] Memindahkan `js/services/`, `js/config/`, `js/data/`, dan `js/utils/` ke `src/` proyek React.
-  - [ ] Mengonversi `html/*.html` dan `js/features/*.js` menjadi komponen `.jsx` + *custom hooks*.
+- [ ] **7.2 Migrasi 1:1 ke React + Vite + Leaflet (Tanpa Ubah Fitur, Siap Integrasi BE â€” `MIGRATION-REACT.md` Step 0-8):**
+  - [ ] Menyiapkan fondasi proyek `frontend-react/` (Vite + React + Tailwind + Leaflet + `.env.example`) dan memindahkan `js/services/`, `js/config/`, `js/data/`, serta utilitas murni ke `src/` (`MIGRATION-REACT.md` Step 1-2).
+  - [ ] Menyiapkan `normalizeReport()` di `src/services/api.js` dan mempertahankan seluruh perilaku fitur yang ada (Mode Demo fallback, Google OAuth + auth lokal, foto bukti maks. 24 jam, duplikat 15m, Laporan Saya, dialog detail, pemangkas avatar, dan panel Sarpras) saat konversi komponen `.jsx` (`MIGRATION-REACT.md` Step 3-7).
+  - [ ] Menjalankan verifikasi end-to-end build React melawan `backend/main.py` (`MIGRATION-REACT.md` Step 8).
 - [ ] **7.3 Fitur Wajib Disisakan untuk Final Day (16 Desember 2026):**
   - [ ] Notifikasi *real-time* kepada pelapor saat status laporan diperbarui Admin.
   - [ ] Ekspor rekapitulasi laporan bulanan ke format PDF / CSV.

@@ -1,4 +1,4 @@
-// Fitur foto bukti: unggah kamera langsung atau pilih file terbaru (maks 24 jam), validasi MIME & ukuran maks 5 MB.
+// Fitur foto bukti: foto live dari kamera, validasi tipe dan ukuran maks 5 MB, tolak foto lebih dari 24 jam.
 
 import { state } from '../state/store.js';
 import { showToast } from '../utils/toast.js';
@@ -82,7 +82,7 @@ export function handlePhotoChange(event) {
   if (isStale) {
     showStaleAlert();
     syncSubmitButtonState();
-    showToast('Foto lama (lebih dari 24 jam) ditolak. Ambil atau pilih foto terbaru (maks. 24 jam).', 'error');
+    showToast('Foto lama (lebih dari 24 jam) ditolak. Ambil foto terbaru langsung di lokasi.', 'error');
   } else {
     hideStaleAlert();
     syncSubmitButtonState();

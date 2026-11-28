@@ -1,8 +1,8 @@
-# Product Requirements Document (PRD) — Frontend ReportLoop
+# Product Requirements Document (PRD) â€” Frontend ReportLoop
 
-**Versi:** 1.0 (Fase Semifinal STACK 2026 — GDGoC ITB)  
+**Versi:** 1.0 (Fase Semifinal STACK 2026 â€” GDGoC ITB)  
 **Pemilik Modul:** M. Fadil Faiz (UI/UX Designer & Frontend Developer)  
-**Tim:** Tim Perintis — D4 Teknologi Rekayasa Komputer, Politeknik Negeri Indramayu  
+**Tim:** Tim Perintis â€” D4 Teknologi Rekayasa Komputer, Politeknik Negeri Indramayu  
 **Target Lingkungan:** Web App Responsif (*Mobile-First* & *Desktop*)  
 
 ---
@@ -31,7 +31,7 @@
 
 ## 3. Ruang Lingkup Fitur: Semifinal vs. Final Day
 
-Mengacu pada aturan **STACK 2026**, aplikasi Semifinal wajib berjalan utuh untuk alur inti (*Early Prototype*), namun harus menyisakan 2–3 tugas substantif untuk dikerjakan langsung saat **Build Session Final Day (16 Desember 2026)**.
+Mengacu pada aturan **STACK 2026**, aplikasi Semifinal wajib berjalan utuh untuk alur inti (*Early Prototype*), namun harus menyisakan 2â€“3 tugas substantif untuk dikerjakan langsung saat **Build Session Final Day (16 Desember 2026)**.
 
 ### 3.1 Cakupan Wajib Semifinal (Deadline: 30 November 2026)
 * **FR-01 Autentikasi Peran, Google OAuth & Isolasi Portal Sarpras (CIA):** Halaman masuk & daftar terpisah untuk Mahasiswa (berbasis NIM + Email Google umum, atau *Masuk/Daftar dengan Google* OAuth) dan Admin Sarpras (berbasis Email Google + Kode Undangan, atau Google OAuth dengan verifikasi kode undangan). Dilengkapi fitur **Lupa kata sandi** serta opsi **Ingat saya di perangkat ini** yang memperpanjang masa berlaku sesi dari 8 jam menjadi 7 hari. Portal masuk Admin Sarpras (`admin-masuk.html` / subdomain terpisah di produksi) diisolasi dan tidak ditautkan di UI publik (`index.html`) maupun halaman Mahasiswa untuk meminimalkan permukaan serangan dan menjaga aspek keamanan CIA (*Confidentiality, Integrity, Availability*).
@@ -70,23 +70,32 @@ Fitur berikut **tidak boleh** diklaim selesai pada demo/proposal Semifinal:
 
 ---
 
-## 5. Kontrak API Frontend – Backend (FastAPI Specification)
+## 5. Kontrak API Frontend â€“ Backend (FastAPI Specification)
 
-Dokumen ini menjadi acuan sinkronisasi antara **Frontend** dan **Backend (Ibrahim Movik)** sebelum migrasi ke React:
+Dokumen ini menjadi acuan sinkronisasi antara **Frontend** (Vanilla maupun hasil migrasi **React + Vite**) dan **Backend (`backend/main.py`)**:
 
 | Metode | Endpoint | Payload / Query | Respons Sukses | Penanganan Error di FE |
 | :--- | :--- | :--- | :--- | :--- |
-| `GET` | `/api/reports` | Optional: `?category=&status=&sort=` | `200 OK` — Array objek `Report` | Fallback ke `SEED_REPORTS` (Mode Demo) dengan toast peringatan. |
-| `POST` | `/api/reports` | `multipart/form-data`: `title`, `description`, `latitude`, `longitude`, `force_submit` (`bool`), `photo` (`file`) | `201 Created` — Objek `Report` baru hasil klasifikasi NLP | `400` (`STALE_PHOTO_REJECTED`): tampilkan banner foto lama.<br>`409` (`DUPLICATE_NEARBY_REPORT`): buka modal laporan serupa. |
-| `POST` | `/api/reports/{id}/upvote` | Header `Authorization` / `user_id` | `200 OK` — Objek `Report` dengan `upvotes` terbaru | `409` jika sudah pernah upvote; sinkronkan state lokal. |
-| `PATCH` | `/api/reports/{id}/status` | JSON `{ "status": "In Progress" \| "Resolved" }` | `200 OK` — Objek `Report` dengan status terbaru | Tampilkan toast gagal dan kembalikan tombol ke status semula. |
+| `GET` | `/api/reports` | Optional: `?category=&status=&reporter_id=&sort=` | `200 OK` â€” Array objek `Report` | Fallback ke `SEED_REPORTS` (Mode Demo) dengan toast peringatan. |
+| `POST` | `/api/reports` | `multipart/form-data`: `title`, `description`, `latitude`, `longitude`, `force_submit` (`bool`), `photo` (`file`) | `201 Created` â€” Objek `Report` baru hasil klasifikasi NLP | `400` (`STALE_PHOTO_REJECTED`): tampilkan banner foto lama.<br>`409` (`DUPLICATE_NEARBY_REPORT`): buka modal laporan serupa. |
+| `POST` | `/api/reports/{id}/upvote` | Header `Authorization: Bearer <token>` | `200 OK` â€” Objek `Report` dengan `upvotes` terbaru | `409` (`ALREADY_UPVOTED`) jika sudah pernah upvote; sinkronkan state lokal. |
+| `DELETE` | `/api/reports/{id}/upvote` | Header `Authorization: Bearer <token>` | `200 OK` â€” Objek `Report` dengan `upvotes` terbaru | Batalkan dukungan pengguna dan perbarui tampilan tombol. |
+| `PATCH` | `/api/reports/{id}/status` | JSON `{ "status": "In Progress" \| "Resolved" }` + Header Admin | `200 OK` â€” Objek `Report` dengan status terbaru | `403` (`FORBIDDEN`) jika bukan Admin; tampilkan toast gagal dan kembalikan tombol ke status semula. |
+| `POST` | `/api/auth/google` | JSON `{ "credential", "role", "nim?", "invite_code?" }` | `200 OK` â€” `{ "id", "email", "name", "token" }` | `422` (`NIM_REQUIRED` / `INVITE_REQUIRED`): buka modal lengkapi data. |
 
 ### Skema Objek `Report` (JSON)
 
-`place_name` bersifat opsional dan masih menunggu kesepakatan dengan backend. Bila kosong, FE menurunkan nama tempat dari titik kampus terdekat (radius 80 m).
+Lapisan `api.js` menormalisasi respons `backend/main.py` lewat `normalizeReport()` agar komponen UI (termasuk setelah pindah ke React) langsung kompatibel tanpa perlu diubah:
+* `user_id`: diisi otomatis dari `raw.user_id ?? raw.reporter_id`.
+* `photo_url`: jika diawali `/uploads/`, digabung dengan `FASTAPI_BASE_URL` agar foto dari FastAPI langsung tampil.
+* `place_name`: memakai `raw.place_name` bila tersedia; jika kosong, diturunkan otomatis lewat `getPlaceName()` (radius 80 m dari `CAMPUS_PLACES`, fallback `"Area kampus"`).
+* `status_history`: memakai `Array.isArray(raw.status_history) ? raw.status_history : []` agar dialog detail dan tab *Pembaruan* tetap jujur sesuai data nyata.
+
 ```json
 {
   "id": "rep-001",
+  "reporter_id": "2509015",
+  "reporter_name": "Ibrahim Movik",
   "title": "Lampu lorong lantai 2 padam",
   "description": "Lampu penerangan koridor lantai 2 mati sejak kemarin malam.",
   "photo_url": "/uploads/rep-001.jpg",

@@ -84,7 +84,7 @@ frontend/
 - Autentikasi terpisah Mahasiswa (NIM + Email Google) dan Admin Sarpras (Email Google + kode undangan), dilengkapi **Google OAuth**, **Lupa kata sandi**, dan opsi **Ingat saya (7 hari)**.
 - Peta interaktif kampus Polindra (Leaflet.js) dengan *draggable marker* dan status pin.
 - Form pelaporan + pratinjau kategori NLP otomatis (*Infrastructure*, *Cleanliness*, *Security*).
-- Validasi foto bukti dan deteksi laporan duplikat dalam radius 15 meter.
+- Validasi foto bukti terbaru (kamera langsung atau unggah file maks. 24 jam, JPG/PNG/WebP maks. 5 MB) dan deteksi laporan duplikat dalam radius 15 meter.
 - Papan laporan publik dengan filter, pencarian, dan `+1 Upvote`.
 - Panel triase Admin Sarpras (`Received` -> `In Progress` -> `Resolved`) + Light/Dark Mode.
 

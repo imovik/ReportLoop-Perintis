@@ -1,8 +1,10 @@
-venv/
-.venv/
-__pycache__/
-*.pyc
+node_modules/
+dist/
+.vite/
 .env
-backend/uploads/*
-!backend/uploads/.gitkeep
-.DS_Store
+.env.local
+.env.*.local
+
+# Abaikan semua file dokumentasi .md kecuali README.md
+*.md
+!README.md

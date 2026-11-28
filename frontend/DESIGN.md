@@ -28,23 +28,23 @@ Komposisi visual pada referensi gambar diterapkan secara fungsional untuk kebutu
 Palet dibatasi pada **2 warna inti (Putih/Slate netral + Biru Merek)** ditambah **3 warna status fungsional** yang hanya muncul pada badge status dan pin peta.
 
 ### 2.1 Token Warna Light Mode (`:root` / Default - Soft-White Anti-Silau)
-Palet terang menggunakan *soft-white* (putih tidak terlalu putih/mencolok) untuk menjaga kenyamanan baca bagi mahasiswa bermata minus maupun petugas Sarpras senior.
-* **Latar Utama (`--bg-page`):** `#f1f5f9` (Soft-white abu-biru lembut, mengurangi silau layar).
-* **Permukaan Kartu (`--bg-surface`):** `#f8fafc` (Putih lembut dengan garis tepi `1px solid #cbd5e1`, bukan `#ffffff` murni yang menyilaukan).
-* **Permukaan Sekunder (`--bg-subtle`):** `#e8f0fe` (Biru lembut untuk sorotan info NLP & kartu ringkasan).
-* **Teks Utama (`--text-primary`):** `#0f172a` (Kontras > 13:1 terhadap latar soft-white).
-* **Teks Sekunder (`--text-secondary`):** `#475569` (Kontras > 6:1 terhadap latar soft-white, lolos WCAG AA).
-* **Warna Merek Utama (`--brand`):** `#1d4ed8` (Biru Cobalt tegas; hover `#1e40af`).
-* **Garis Pembatas (`--border`):** `#cbd5e1`.
+Palet terang menggunakan *soft-white* (putih tidak terlalu putih/mencolok) untuk menjaga kenyamanan baca bagi mahasiswa bermata minus maupun petugas Sarpras senior. Seluruh nama token mengacu langsung pada `css/base.css`:
+* **Latar Utama (`--page`):** `#f1f5f9` (Soft-white abu-biru lembut, mengurangi silau layar).
+* **Permukaan Kartu (`--surface`):** `#f8fafc` (Putih lembut dengan garis tepi `1px solid var(--line)`, bukan `#ffffff` murni yang menyilaukan; permukaan redup `--surface-muted`: `#e2e8f0`).
+* **Permukaan Sekunder Merek (`--brand-soft`):** `#e8f0fe` (Biru lembut untuk sorotan info NLP & kartu ringkasan; garis tepi `--brand-line`: `#bfdbfe`).
+* **Teks Utama (`--ink`):** `#0f172a` (Kontras > 13:1 terhadap latar soft-white).
+* **Teks Sekunder (`--ink-soft`):** `#475569` (Kontras > 6:1 terhadap latar soft-white, lolos WCAG AA).
+* **Warna Merek Utama (`--brand`):** `#1d4ed8` (Biru Cobalt tegas; hover `--brand-dark`: `#1e40af`).
+* **Garis Pembatas (`--line`):** `#cbd5e1`.
 
 ### 2.2 Token Warna Dark Mode (`html.dark`)
-* **Latar Utama (`--bg-page`):** `#090e1a` (Biru malam sangat gelap, bukan hitam pekat agar nyaman di mata).
-* **Permukaan Kartu (`--bg-surface`):** `#111827` (Slate biru gelap dengan garis tepi `1px solid #1e293b`).
-* **Permukaan Sekunder (`--bg-subtle`):** `#172554` (Biru tua lembut untuk kotak prediksi NLP & sorotan aktif).
-* **Teks Utama (`--text-primary`):** `#f8fafc` (Putih bersih, kontras > 15:1).
-* **Teks Sekunder (`--text-secondary`):** `#cbd5e1` (Abu-biru terang, kontras > 9:1).
-* **Warna Merek Utama (`--brand`):** `#3b82f6` untuk tombol/sorotan latar & `#60a5fa` untuk teks tautan/aksen judul (kontras > 6:1 di latar gelap).
-* **Garis Pembatas (`--border`):** `#1e293b`.
+* **Latar Utama (`--page`):** `#090e1a` (Biru malam sangat gelap, bukan hitam pekat agar nyaman di mata).
+* **Permukaan Kartu (`--surface`):** `#111827` (Slate biru gelap dengan garis tepi `1px solid var(--line)`; permukaan redup `--surface-muted`: `#1e293b`).
+* **Permukaan Sekunder Merek (`--brand-soft`):** `#172554` (Biru tua lembut untuk kotak prediksi NLP & sorotan aktif; garis tepi `--brand-line`: `#1e40af`).
+* **Teks Utama (`--ink`):** `#f8fafc` (Putih bersih, kontras > 15:1).
+* **Teks Sekunder (`--ink-soft`):** `#cbd5e1` (Abu-biru terang, kontras > 9:1).
+* **Warna Merek Utama (`--brand`):** `#3b82f6` untuk tombol/sorotan latar & `#60a5fa` untuk teks tautan/aksen judul (kontras > 6:1 di latar gelap; hover `--brand-dark`: `#2563eb`).
+* **Garis Pembatas (`--line`):** `#1e293b`.
 
 ### 2.3 Warna Status Fungsional (Konsisten di Kedua Tema)
 | Status | Light Mode (Latar / Teks) | Dark Mode (Latar / Teks) | Pin Peta |
@@ -88,7 +88,7 @@ Catatan: `.badge-cat` memakai `#e8eef7` (terang) dan `#1e293b` (gelap) sebagai l
   * Input form, tombol standar, & badge status: `8px` (`0.5rem`).
   * Filter chip kategori & indikator aktif: `9999px` (pill khusus kontrol filter).
 * **Elevasi & Bayangan (`R-12`):**
-  * Kartu di atas kanvas memakai garis tepi `1px solid var(--border)` tanpa bayangan tebal.
+  * Kartu di atas kanvas memakai garis tepi `1px solid var(--line)` tanpa bayangan tebal.
   * Bayangan lembut hanya dipakai pada elemen melayang: header sticky (`shadow-sm`), pin koordinat di atas peta, dan modal dialog konfirmasi duplikat.
 * **Standar Target Sentuh & Fokus (`R-03`, `R-32`):**
   * Seluruh tombol interaktif, chip filter, tab, dan tombol toggle tema memiliki tinggi minimal `44px` (`min-h-[44px]`).
@@ -140,7 +140,7 @@ Seluruh tampilan wajib tetap fungsional, nyaman disentuh, dan bebas *horizontal 
   * Tab papan laporan (`.tab`) menggunakan padding kompak (`0.5rem 0.625rem`, `0.8125rem`) dengan wadah gulir horizontal opsional agar seluruh tab tetap terbaca jelas pada layar `320px-360px`.
   * Kartu ringkasan KPI pada panel admin (`view-admin.html`) memakai garis pemisah vertikal internal pada kolom ganjil (`border-r`) serta skala angka `text-2xl sm:text-3xl`.
 * **Posisi Toast Aman Layar Sempit (`html/header.html`):** Kontainer `#toast-container` memakai jangkar `left-3 right-3 bottom-4` pada layar `< 640px` dan `sm:right-5 sm:bottom-5 sm:max-w-sm` pada layar lebih besar agar notifikasi tidak pernah terpotong di tepi kiri layar.
-* **Komponen Pelacakan Progres Admin (User View):** Ditampilkan ringkas di dalam kartu laporan (`publicBoard.js`) dan halaman Laporan Saya (`myReports.js`) menggunakan 3 tahap berurutan (`Diterima` -> `Diperbaiki` -> `Selesai`) dengan warna status yang sudah ditetapkan, garis penghubung netral (`1px solid var(--border)` atau aksen biru merek pada tahap aktif/selesai), radius `8px` pada blok rincian riwayat, serta tanpa animasi berulang atau badge hiasan berlebihan. Jika `status_history` kosong, tampilkan status berjalan secara jujur tanpa mengarang riwayat palsu.
+* **Komponen Pelacakan Progres Admin (User View):** Ditampilkan ringkas di dalam kartu laporan (`publicBoard.js`) dan halaman Laporan Saya (`myReports.js`) menggunakan 3 tahap berurutan (`Diterima` -> `Diperbaiki` -> `Selesai`) dengan warna status yang sudah ditetapkan, garis penghubung netral (`1px solid var(--line)` atau aksen biru merek pada tahap aktif/selesai), radius `8px` pada blok rincian riwayat, serta tanpa animasi berulang atau badge hiasan berlebihan. Jika `status_history` kosong, tampilkan status berjalan secara jujur tanpa mengarang riwayat palsu.
 
 ---
 
